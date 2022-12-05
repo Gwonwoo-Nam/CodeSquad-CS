@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class Application {
+public class Application_1 {
 
     public static void main(String[] args) {
         SolarCircle solarCircle = new SolarCircle();
