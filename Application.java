@@ -5,13 +5,12 @@ public class Application {
     public static void main(String[] args) {
         SolarCircle solarCircle = new SolarCircle();
         OutputView outputView = new OutputView();
+        InputView inputView = new InputView();
 
-        for (int size = 1; size < 80; size++) {
-            List<String> c1 = solarCircle.draw(size);
-            outputView.printCircle(c1, size);
-        }
-
+        outputView.askSize();
+        int size = inputView.readSize();
+        List<String> circle = solarCircle.draw(size);
+        outputView.printCircle(circle, size);
     }
-
 }
 
