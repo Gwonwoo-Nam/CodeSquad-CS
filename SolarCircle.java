@@ -66,14 +66,18 @@ public class SolarCircle implements Circle {
 
     private void addMark(double distance, int index, int mapX, int mapY) {
         if (distance <= CLOSE_DISTANCE) {
-            if (index < mapX*mapY && solarMap.get(index) == EMPTY_MARK) {
-             //   solarMap.set(index, CIRCLE_MARK);
-                return ;
+            try {
+                if (solarMap.get(index) == EMPTY_MARK) {
+                    solarMap.set(index, CIRCLE_MARK);
+                    return;
+                }
+            } catch (IndexOutOfBoundsException exception) {
+                solarMap.add(CIRCLE_MARK);
+                return;
             }
-            solarMap.add(CIRCLE_MARK);
-            return;
         }
-        solarMap.add(EMPTY_MARK);
+            solarMap.add(EMPTY_MARK);
+
     }
 
 
