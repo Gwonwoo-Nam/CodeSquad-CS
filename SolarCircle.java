@@ -24,6 +24,7 @@ public class SolarCircle implements Circle {
     private void addMark(List<String> circle, double distance) {
         if (distance <= CLOSE_DISTANCE) {
             circle.add(CIRCLE_MARK);
+            return ;
         }
         circle.add(EMPTY_MARK);
     }
