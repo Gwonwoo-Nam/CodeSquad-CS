@@ -18,7 +18,7 @@ public class OutputView {
     public void printMap(List<String> map, int sizeX, int sizeY) {
         for (int x = 0; x < sizeX; x++) {
             for (int y = 0; y < sizeY; y++) {
-                System.out.print(map.get(sizeX * x + y));
+                System.out.print(map.get(sizeY * x + y));
             }
             System.out.println();
         }

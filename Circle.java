@@ -5,5 +5,5 @@ import java.util.List;
 public interface Circle {
     List<String> draw(int size);
 
-    double rotate(LocalDate currentDate, SolarCircle orbitalCircle);
+    double rotate(LocalDate currentDate);
 }

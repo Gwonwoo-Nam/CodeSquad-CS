@@ -14,9 +14,10 @@ public class SolarCircle implements Circle {
     private double x_location;
     private double y_location;
     private double rotationalSpeed;
-
     private double revolutionRadius;
     static private List<String> solarMap = new ArrayList<>();
+
+    private SolarCircle orbitalCircle;
 
 
     SolarCircle() {
@@ -26,12 +27,31 @@ public class SolarCircle implements Circle {
         return solarMap;
     }
 
-    SolarCircle(double rotationalSpeed, double x_location, double y_location,
-            double revolutionRadius) {
-        this.rotationalSpeed = rotationalSpeed;
+    /**
+     * 공전하는 행성이 없는 경우(태양)
+     *
+     * @param rotationalSpeed
+     * @param x_location
+     * @param y_location
+     * @param revolutionRadius
+     */
+    SolarCircle(double x_location, double y_location) {
         this.x_location = x_location;
         this.y_location = y_location;
+    }
+
+    /**
+     * 공전하는 행성이 있는 경우(지구, 달)
+     *
+     * @param rotationalSpeed
+     * @param revolutionRadius
+     * @param orbitalCircle
+     */
+
+    SolarCircle(double rotationalSpeed, double revolutionRadius, SolarCircle orbitalCircle) {
+        this.rotationalSpeed = rotationalSpeed;
         this.revolutionRadius = revolutionRadius;
+        this.orbitalCircle = orbitalCircle;
     }
 
     @Override
@@ -57,7 +77,7 @@ public class SolarCircle implements Circle {
         for (int x_location = 0; x_location < mapX; x_location++) {
             for (int y_location = 0; y_location < mapY; y_location++) {
                 double distance = calculate(x_location, y_location, radius);
-                int index = x_location * mapX + y_location;
+                int index = x_location * mapY + y_location;
                 addMark(distance, index, mapX, mapY);
             }
         }
@@ -76,8 +96,9 @@ public class SolarCircle implements Circle {
                 return;
             }
         }
+        if (solarMap.size() < mapX*mapY) {
             solarMap.add(EMPTY_MARK);
-
+        }
     }
 
 
@@ -97,7 +118,7 @@ public class SolarCircle implements Circle {
     }
 
     @Override
-    public double rotate(LocalDate currentDate, SolarCircle orbitalCircle) {
+    public double rotate(LocalDate currentDate) {
         LocalDate firstDate = LocalDate.of(2022, 01, 01);
         long rotationDays = ChronoUnit.DAYS.between(firstDate, currentDate);
         System.out.println("공전한 날 : " + rotationDays);
