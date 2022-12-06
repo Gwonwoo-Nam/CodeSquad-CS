@@ -2,9 +2,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 
-public class Application_2 {
+public class Application_3 {
 
     public static void main(String[] args) {
+
         OutputView outputView = new OutputView();
         InputView inputView = new InputView();
 
@@ -17,12 +18,10 @@ public class Application_2 {
         SolarMap.setXAxisMapSize(mapSizeX);
         SolarMap.setYAxisMapSize(mapSizeY);
 
-        Planets.EARTH.rotate(inputDate);
-        Planets.MOON.rotate(inputDate);
-
-        Planets.SUN.draw();
-        Planets.EARTH.draw();
-        Planets.MOON.draw();
+        for (Planets planet : Planets.values()) {
+            planet.rotate(inputDate);
+            planet.draw();
+        }
 
         List<String> solarMap = SolarMap.getSolarMap();
         outputView.printMap(solarMap);

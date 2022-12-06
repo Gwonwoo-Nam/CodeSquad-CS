@@ -5,5 +5,4 @@ import java.util.List;
 public interface Circle {
     void draw(int size);
 
-    double rotate(LocalDate currentDate);
 }

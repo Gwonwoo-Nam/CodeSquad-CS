@@ -1,7 +1,6 @@
-
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-
+/**
+ * Application 1에서만 사용됨. (인스턴스 생성 불가한 Enum의 특성 때문에 확장 불가)
+ */
 public class SolarCircle implements Circle {
 
     private final double CLOSE_DISTANCE = 0.5;
@@ -9,38 +8,12 @@ public class SolarCircle implements Circle {
     private final String EMPTY_MARK = " ";
     private double xLocation;
     private double yLocation;
-    private double rotationalSpeed;
-    private double revolutionRadius;
-    private SolarCircle orbitalCircle;
 
 
-    /**
-     * 공전하는 행성이 없는 경우(태양)
-     *
-     * @param rotationalSpeed
-     * @param xLocation
-     * @param yLocation
-     * @param revolutionRadius
-     */
     SolarCircle(double xLocation, double yLocation, String circleMark) {
         this.xLocation = xLocation;
         this.yLocation = yLocation;
         this.circleMark = circleMark;
-    }
-
-    /**
-     * 공전하는 행성이 있는 경우(지구, 달)
-     *
-     * @param rotationalSpeed
-     * @param revolutionRadius
-     * @param orbitalCircle
-     */
-
-    SolarCircle(double rotationalSpeed, double revolutionRadius, String circleMark, SolarCircle orbitalCircle) {
-        this.rotationalSpeed = rotationalSpeed;
-        this.revolutionRadius = revolutionRadius;
-        this.circleMark = circleMark;
-        this.orbitalCircle = orbitalCircle;
     }
 
     public void draw(int size) {
@@ -59,7 +32,7 @@ public class SolarCircle implements Circle {
     private double calculateDistance(int x, int y, double radius) {
         double distance = Math.abs(
                 radius - Math.sqrt(
-                        (Math.pow(x - (int)xLocation, 2) + Math.pow(y - (int)yLocation, 2))));
+                        (Math.pow(x - xLocation, 2) + Math.pow(y - yLocation, 2))));
 
         return distance;
     }
@@ -96,19 +69,5 @@ public class SolarCircle implements Circle {
         } catch (IndexOutOfBoundsException exception) {
             SolarMap.addMarker(EMPTY_MARK);
         }
-    }
-
-
-    @Override
-    public double rotate(LocalDate currentDate) {
-        LocalDate firstDate = LocalDate.of(2022, 01, 01);
-        long rotationDays = ChronoUnit.DAYS.between(firstDate, currentDate);
-
-        double rotationAngle = 2 * Math.PI * rotationalSpeed * rotationDays;
-
-        xLocation = orbitalCircle.xLocation + (revolutionRadius * Math.sin(rotationAngle));
-        yLocation = orbitalCircle.yLocation + (revolutionRadius * Math.cos(rotationAngle));
-
-        return rotationDays;
     }
 }
