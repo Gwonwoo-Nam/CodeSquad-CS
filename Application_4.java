@@ -1,11 +1,12 @@
 import java.time.LocalDate;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
 public class Application_4 {
 
     public static void main(String[] args) throws InterruptedException {
+
+
 
         OutputView outputView = new OutputView();
         InputView inputView = new InputView();
@@ -19,29 +20,22 @@ public class Application_4 {
         SolarMap.setXAxisMapSize(mapSizeX);
         SolarMap.setYAxisMapSize(mapSizeY);
 
+
+
+        GUI gameView = new GUI();
+        new Thread(gameView).start();
+
         int i = 0;
         while (i<1000) {
-            for (Planets planet : Planets.values()) {
+            for (PlanetsGUI planet : PlanetsGUI.values()) {
                 planet.rotate(inputDate);
                 planet.draw();
             }
 
-            List<String> solarMap = SolarMap.getSolarMap();
-            outputView.printMap(solarMap);
-
-            TimeUnit.MILLISECONDS.sleep(500);
-
-            for (int lineIndex=0; lineIndex<25; lineIndex++) {
-                System.out.println();
-            }
-            solarMap.clear();
+            TimeUnit.MILLISECONDS.sleep(100);
 
             inputDate = inputDate.plusDays(1);
             i++;
         }
-
-        List<String> solarMap = SolarMap.getSolarMap();
-        outputView.printMap(solarMap);
-
     }
 }

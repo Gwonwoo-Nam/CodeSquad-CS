@@ -13,8 +13,8 @@ public class Application_3 {
         LocalDate inputDate;
         inputDate = inputView.readDate();
 
-        int mapSizeX = 50;
-        int mapSizeY = 50;
+        int mapSizeX = 70;
+        int mapSizeY = 70;
         SolarMap.setXAxisMapSize(mapSizeX);
         SolarMap.setYAxisMapSize(mapSizeY);
 
