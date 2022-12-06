@@ -6,13 +6,9 @@ import java.util.List;
 
 
 public class SolarCircle implements Circle {
-
     private final double CLOSE_DISTANCE = 0.5;
-    private final String CIRCLE_MARK = "-";
-    private final String EMPTY_MARK = " ";
-
-    private double x_location;
-    private double y_location;
+    private double xLocation;
+    private double yLocation;
     private double rotationalSpeed;
     private double revolutionRadius;
     static private List<String> solarMap = new ArrayList<>();
@@ -31,13 +27,13 @@ public class SolarCircle implements Circle {
      * 공전하는 행성이 없는 경우(태양)
      *
      * @param rotationalSpeed
-     * @param x_location
-     * @param y_location
+     * @param xLocation
+     * @param yLocation
      * @param revolutionRadius
      */
-    SolarCircle(double x_location, double y_location) {
-        this.x_location = x_location;
-        this.y_location = y_location;
+    SolarCircle(double xLocation, double yLocation) {
+        this.xLocation = xLocation;
+        this.yLocation = yLocation;
     }
 
     /**
@@ -54,79 +50,55 @@ public class SolarCircle implements Circle {
         this.orbitalCircle = orbitalCircle;
     }
 
-    @Override
-    public void draw(int size) {
+    public void draw(int size, int mapX, int mapY) {
 
-        double radius = size / 2.0 - 0.5;
+        double radius = (size - 1) / 2.0;
 
-        for (int x_location = 0; x_location < size; x_location++) {
-            for (int y_location = 0; y_location < size; y_location++) {
-                double distance = calculateDistance(x_location, y_location, radius);
-                int index = x_location * size + y_location;
-                addMark(distance, index, size, size);
-            }
-        }
-    }
-
-    public void drawMap(int size, int mapX, int mapY) {
-
-        double radius = size / 2.0 - 0.5;
-
-        for (int x_location = 0; x_location < mapX; x_location++) {
-            for (int y_location = 0; y_location < mapY; y_location++) {
-                double distance = calculate(x_location, y_location, radius);
-                int index = x_location * mapY + y_location;
+        for (int xLocation = 0; xLocation < mapX; xLocation++) {
+            for (int yLocation = 0; yLocation < mapY; yLocation++) {
+                double distance = calculateDistance(xLocation, yLocation, radius);
+                int index = xLocation * mapY + yLocation;
                 addMark(distance, index, mapX, mapY);
             }
         }
     }
 
+    private double calculateDistance(int x, int y, double radius) {
+        double distance = Math.abs(
+                radius - Math.sqrt(
+                        (Math.pow(x - xLocation, 2) + Math.pow(y - yLocation, 2))));
+
+        return distance;
+    }
 
     private void addMark(double distance, int index, int mapX, int mapY) {
         if (distance <= CLOSE_DISTANCE) {
             try {
-                if (solarMap.get(index) == EMPTY_MARK) {
-                    solarMap.set(index, CIRCLE_MARK);
+                if (solarMap.get(index) == MapMarkers.EMPTY_MARK.getMarker()) {
+                    solarMap.set(index, MapMarkers.CIRCLE_MARK.getMarker());
                     return;
                 }
             } catch (IndexOutOfBoundsException exception) {
-                solarMap.add(CIRCLE_MARK);
+                solarMap.add(MapMarkers.CIRCLE_MARK.getMarker());
                 return;
             }
         }
         if (solarMap.size() < mapX*mapY) {
-            solarMap.add(EMPTY_MARK);
+            solarMap.add(MapMarkers.EMPTY_MARK.getMarker());
         }
     }
 
 
-    private double calculateDistance(int x, int y, double radius) {
-        double distance = Math.abs(
-                radius - Math.sqrt((Math.pow(x - radius, 2) + Math.pow(y - radius, 2))));
-
-        return distance;
-    }
-
-    private double calculate(int x, int y, double radius) {
-        double distance = Math.abs(
-                radius - Math.sqrt(
-                        (Math.pow(x - (int) x_location, 2) + Math.pow(y - (int) y_location, 2))));
-
-        return distance;
-    }
 
     @Override
     public double rotate(LocalDate currentDate) {
         LocalDate firstDate = LocalDate.of(2022, 01, 01);
         long rotationDays = ChronoUnit.DAYS.between(firstDate, currentDate);
-        System.out.println("공전한 날 : " + rotationDays);
-        System.out.println("공전 바퀴 수 : " + rotationalSpeed * rotationDays);
+
         double rotationAngle = 2 * Math.PI * rotationalSpeed * rotationDays;
 
-        x_location = orbitalCircle.x_location + (revolutionRadius * Math.sin(rotationAngle));
-        y_location = orbitalCircle.y_location + (revolutionRadius * Math.cos(rotationAngle));
-        System.out.println("현재 x 위치 : " + x_location);
-        System.out.println("현재 y 위치 : " + y_location);
+        xLocation = orbitalCircle.xLocation + (revolutionRadius * Math.sin(rotationAngle));
+        yLocation = orbitalCircle.yLocation + (revolutionRadius * Math.cos(rotationAngle));
 
         return rotationDays;
     }

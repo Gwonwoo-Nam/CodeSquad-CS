@@ -20,9 +20,9 @@ public class Application_2 {
 
         int mapX = 100;
         int mapY = 100;
-        sun.drawMap(10,mapX,mapY);
-        earth.drawMap(5, mapX,mapY);
-        moon.drawMap(3,mapX,mapY);
+        sun.draw(10,mapX,mapY);
+        earth.draw(5, mapX,mapY);
+        moon.draw(3,mapX,mapY);
 
         List<String> solarMap = SolarCircle.getSolarMap();
         outputView.printMap(solarMap, mapX,mapY);
