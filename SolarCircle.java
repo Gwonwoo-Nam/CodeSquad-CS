@@ -9,7 +9,7 @@ public class SolarCircle implements Circle {
 
     private final double CLOSE_DISTANCE = 0.5;
     private final String CIRCLE_MARK = "-";
-    private final String EMPTY_MARK = "X";
+    private final String EMPTY_MARK = " ";
 
     private double x_location;
     private double y_location;
@@ -55,19 +55,17 @@ public class SolarCircle implements Circle {
     }
 
     @Override
-    public List<String> draw(int size) {/*
-        List<String> circle = new ArrayList<>();
+    public void draw(int size) {
+
         double radius = size / 2.0 - 0.5;
 
         for (int x_location = 0; x_location < size; x_location++) {
             for (int y_location = 0; y_location < size; y_location++) {
                 double distance = calculateDistance(x_location, y_location, radius);
                 int index = x_location * size + y_location;
-                addMark(distance, index, mapX, mapY);
+                addMark(distance, index, size, size);
             }
         }
-        return circle;*/
-        return null;
     }
 
     public void drawMap(int size, int mapX, int mapY) {
@@ -125,8 +123,8 @@ public class SolarCircle implements Circle {
         System.out.println("공전 바퀴 수 : " + rotationalSpeed * rotationDays);
         double rotationAngle = 2 * Math.PI * rotationalSpeed * rotationDays;
 
-        x_location = orbitalCircle.x_location + (revolutionRadius * Math.cos(rotationAngle));
-        y_location = orbitalCircle.y_location + (revolutionRadius * Math.sin(rotationAngle));
+        x_location = orbitalCircle.x_location + (revolutionRadius * Math.sin(rotationAngle));
+        y_location = orbitalCircle.y_location + (revolutionRadius * Math.cos(rotationAngle));
         System.out.println("현재 x 위치 : " + x_location);
         System.out.println("현재 y 위치 : " + y_location);
 

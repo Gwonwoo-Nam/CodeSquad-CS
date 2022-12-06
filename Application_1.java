@@ -9,8 +9,8 @@ public class Application_1 {
 
         outputView.askSize();
         int size = inputView.readSize();
-        List<String> circle = solarCircle.draw(size);
-        outputView.printCircle(circle, size);
+        solarCircle.drawMap(size, size, size);
+        outputView.printMap(solarCircle.getSolarMap(), size, size);
     }
 }
 
