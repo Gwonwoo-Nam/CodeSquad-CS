@@ -1,28 +1,18 @@
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class SolarCircle implements Circle {
 
     private final double CLOSE_DISTANCE = 0.5;
+    private String circleMark;
+    private final String EMPTY_MARK = " ";
     private double xLocation;
     private double yLocation;
     private double rotationalSpeed;
     private double revolutionRadius;
-
-
     private SolarCircle orbitalCircle;
 
-
-    SolarCircle() {
-    }
-
-    public static List<String> getSolarMap() {
-        return solarMap;
-    }
 
     /**
      * 공전하는 행성이 없는 경우(태양)
@@ -32,9 +22,10 @@ public class SolarCircle implements Circle {
      * @param yLocation
      * @param revolutionRadius
      */
-    SolarCircle(double xLocation, double yLocation) {
+    SolarCircle(double xLocation, double yLocation, String circleMark) {
         this.xLocation = xLocation;
         this.yLocation = yLocation;
+        this.circleMark = circleMark;
     }
 
     /**
@@ -45,9 +36,10 @@ public class SolarCircle implements Circle {
      * @param orbitalCircle
      */
 
-    SolarCircle(double rotationalSpeed, double revolutionRadius, SolarCircle orbitalCircle) {
+    SolarCircle(double rotationalSpeed, double revolutionRadius, String circleMark, SolarCircle orbitalCircle) {
         this.rotationalSpeed = rotationalSpeed;
         this.revolutionRadius = revolutionRadius;
+        this.circleMark = circleMark;
         this.orbitalCircle = orbitalCircle;
     }
 
@@ -86,11 +78,11 @@ public class SolarCircle implements Circle {
      */
     private void drawCircleMark(int index) {
         try {
-            if (solarMap.get(index) == MapMarkers.EMPTY_MARK.getMarker()) {
-                solarMap.set(index, MapMarkers.CIRCLE_MARK.getMarker());
+            if (SolarMap.getSolarMap().get(index) == EMPTY_MARK) {
+                SolarMap.setMarker(index, circleMark);
             }
         } catch (IndexOutOfBoundsException exception) {
-            solarMap.add(MapMarkers.CIRCLE_MARK.getMarker());
+            SolarMap.addMarker(circleMark);
         }
     }
     /**
@@ -100,9 +92,9 @@ public class SolarCircle implements Circle {
      */
     private void drawEmptyMark(int index) {
         try {
-            solarMap.get(index); // 값이 이미 있으면 넘어간다.
+            SolarMap.getSolarMap().get(index); // 값이 이미 있으면 넘어간다.
         } catch (IndexOutOfBoundsException exception) {
-            solarMap.add(MapMarkers.EMPTY_MARK.getMarker());
+            SolarMap.addMarker(EMPTY_MARK);
         }
     }
 

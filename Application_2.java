@@ -5,9 +5,9 @@ import java.util.List;
 public class Application_2 {
 
     public static void main(String[] args) {
-        SolarCircle sun = new SolarCircle(50,50);
-        SolarCircle earth = new SolarCircle(1/365.25,40, sun);
-        SolarCircle moon = new SolarCircle(1/27.3,8,earth);
+        SolarCircle sun = new SolarCircle(50,50,"O");
+        SolarCircle earth = new SolarCircle(1/365.25,40,  "*" ,sun);
+        SolarCircle moon = new SolarCircle(1/27.3,8,"-",earth);
         OutputView outputView = new OutputView();
         InputView inputView = new InputView();
 
@@ -27,7 +27,7 @@ public class Application_2 {
         earth.draw(5);
         moon.draw(3);
 
-        List<String> solarMap = SolarCircle.getSolarMap();
+        List<String> solarMap = SolarMap.getSolarMap();
         outputView.printMap(solarMap);
     }
 }
