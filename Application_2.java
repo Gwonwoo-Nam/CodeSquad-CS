@@ -11,8 +11,12 @@ public class Application_2 {
         OutputView outputView = new OutputView();
         InputView inputView = new InputView();
 
-        earth.rotate(LocalDate.of(2022,5,14));
-        moon.rotate(LocalDate.of(2022,5,14));
+        outputView.askDate();
+        LocalDate inputDate;
+        inputDate = inputView.readDate();
+
+        earth.rotate(inputDate);
+        moon.rotate(inputDate);
 
         int mapX = 90;
         int mapY = 30;
