@@ -11,10 +11,10 @@ public class OutputView {
         System.out.println(INPUT_DATE_MESSAGE);
     }
 
-    public void printMap(List<String> map, int sizeX, int sizeY) {
-        for (int x = 0; x < sizeX; x++) {
-            for (int y = 0; y < sizeY; y++) {
-                System.out.print(map.get(sizeY * x + y));
+    public void printMap(List<String> map) {
+        for (int x = 0; x < SolarMap.getXAxisMapSize(); x++) {
+            for (int y = 0; y < SolarMap.getYAxisMapSize(); y++) {
+                System.out.print(map.get(SolarMap.getYAxisMapSize() * x + y));
             }
             System.out.println();
         }

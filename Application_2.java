@@ -18,13 +18,16 @@ public class Application_2 {
         earth.rotate(inputDate);
         moon.rotate(inputDate);
 
-        int mapX = 100;
-        int mapY = 100;
-        sun.draw(10,mapX,mapY);
-        earth.draw(5, mapX,mapY);
-        moon.draw(3,mapX,mapY);
+        int mapSizeX = 100;
+        int mapSizeY = 100;
+        SolarMap.setXAxisMapSize(mapSizeX);
+        SolarMap.setYAxisMapSize(mapSizeY);
+
+        sun.draw(10);
+        earth.draw(5);
+        moon.draw(3);
 
         List<String> solarMap = SolarCircle.getSolarMap();
-        outputView.printMap(solarMap, mapX,mapY);
+        outputView.printMap(solarMap);
     }
 }

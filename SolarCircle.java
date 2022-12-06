@@ -6,6 +6,7 @@ import java.util.List;
 
 
 public class SolarCircle implements Circle {
+
     private final double CLOSE_DISTANCE = 0.5;
     private double xLocation;
     private double yLocation;
@@ -50,15 +51,15 @@ public class SolarCircle implements Circle {
         this.orbitalCircle = orbitalCircle;
     }
 
-    public void draw(int size, int mapX, int mapY) {
+    public void draw(int size) {
 
         double radius = (size - 1) / 2.0;
 
-        for (int xLocation = 0; xLocation < mapX; xLocation++) {
-            for (int yLocation = 0; yLocation < mapY; yLocation++) {
+        for (int xLocation = 0; xLocation < SolarMap.getXAxisMapSize(); xLocation++) {
+            for (int yLocation = 0; yLocation < SolarMap.getYAxisMapSize(); yLocation++) {
                 double distance = calculateDistance(xLocation, yLocation, radius);
-                int index = xLocation * mapY + yLocation;
-                addMark(distance, index, mapX, mapY);
+                int index = xLocation * SolarMap.getYAxisMapSize() + yLocation;
+                addMark(distance, index);
             }
         }
     }
@@ -71,7 +72,7 @@ public class SolarCircle implements Circle {
         return distance;
     }
 
-    private void addMark(double distance, int index, int mapX, int mapY) {
+    private void addMark(double distance, int index) {
         if (distance <= CLOSE_DISTANCE) {
             try {
                 if (solarMap.get(index) == MapMarkers.EMPTY_MARK.getMarker()) {
@@ -83,11 +84,10 @@ public class SolarCircle implements Circle {
                 return;
             }
         }
-        if (solarMap.size() < mapX*mapY) {
+        if (solarMap.size() < SolarMap.getXAxisMapSize() * SolarMap.getYAxisMapSize()) {
             solarMap.add(MapMarkers.EMPTY_MARK.getMarker());
         }
     }
-
 
 
     @Override
