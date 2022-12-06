@@ -59,7 +59,7 @@ public class SolarCircle implements Circle {
     private double calculateDistance(int x, int y, double radius) {
         double distance = Math.abs(
                 radius - Math.sqrt(
-                        (Math.pow(x - xLocation, 2) + Math.pow(y - yLocation, 2))));
+                        (Math.pow(x - (int)xLocation, 2) + Math.pow(y - (int)yLocation, 2))));
 
         return distance;
     }
