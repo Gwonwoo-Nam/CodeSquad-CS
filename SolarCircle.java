@@ -12,7 +12,7 @@ public class SolarCircle implements Circle {
     private double yLocation;
     private double rotationalSpeed;
     private double revolutionRadius;
-    static private List<String> solarMap = new ArrayList<>();
+
 
     private SolarCircle orbitalCircle;
 
@@ -74,17 +74,34 @@ public class SolarCircle implements Circle {
 
     private void addMark(double distance, int index) {
         if (distance <= CLOSE_DISTANCE) {
-            try {
-                if (solarMap.get(index) == MapMarkers.EMPTY_MARK.getMarker()) {
-                    solarMap.set(index, MapMarkers.CIRCLE_MARK.getMarker());
-                    return;
-                }
-            } catch (IndexOutOfBoundsException exception) {
-                solarMap.add(MapMarkers.CIRCLE_MARK.getMarker());
-                return;
-            }
+            drawCircleMark(index);
         }
-        if (solarMap.size() < SolarMap.getXAxisMapSize() * SolarMap.getYAxisMapSize()) {
+        drawEmptyMark(index);
+    }
+
+    /**
+     * Empty Mark가 이미 있는 경우 Circle Mark로 교체한다.
+     * 없는 경우 Circle Mark를 추가한다.
+     * @param index
+     */
+    private void drawCircleMark(int index) {
+        try {
+            if (solarMap.get(index) == MapMarkers.EMPTY_MARK.getMarker()) {
+                solarMap.set(index, MapMarkers.CIRCLE_MARK.getMarker());
+            }
+        } catch (IndexOutOfBoundsException exception) {
+            solarMap.add(MapMarkers.CIRCLE_MARK.getMarker());
+        }
+    }
+    /**
+     * Mark가 이미 있는 경우 Skip한다.
+     * 없는 경우 Empty Mark를 추가한다.
+     * @param index
+     */
+    private void drawEmptyMark(int index) {
+        try {
+            solarMap.get(index); // 값이 이미 있으면 넘어간다.
+        } catch (IndexOutOfBoundsException exception) {
             solarMap.add(MapMarkers.EMPTY_MARK.getMarker());
         }
     }
