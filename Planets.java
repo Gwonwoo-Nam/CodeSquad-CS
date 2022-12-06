@@ -2,21 +2,21 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public enum Planets {
-    SUN(25, 25, 5, "O"),
-    MERCURY(1 / 25.0, 5, 2, "~", SUN),
-    VENUS(1 / 40.0, 7, 2, "@", SUN),
+    SUN(25, 25, 6, "O"),
+    MERCURY(1 / 25.0, 8, 2, "~", SUN),
+    VENUS(1 / 40.0, 12, 2, "@", SUN),
 
-    EARTH(1 / 365.25, 10, 3, "*", SUN),
+    EARTH(1 / 365.25, 16, 3, "*", SUN),
     MOON(1 / 27.3, 2, 1, "-", EARTH),
-    MARS(1/60.0, 15, 2, "#", SUN),
-    DEIMOS(1 / 420.0, 3, 1, "*", MARS),
-    PHOBOS(1/73.0, 2,1,"-", MARS),
-    JUPITER(1 / 560.0, 13, 4, "X", SUN),
-    SATURN(1 / 1230.0, 15, 2, "%", SUN),
-    TITAN(1/180.0, 4, 2, "~", SATURN),
-    IAPETUS(1/37.2, 3, 1, "*", SATURN),
-    NEPTUNE(1 / 2884.0, 17, 2, "&", SUN),
-    PLUTO(1 / 6420.0, 23, 2, "o", SUN);
+    MARS(1/60.0, 20, 2, "#", SUN),
+    DEIMOS(1 / 420.0, 4, 1, "*", MARS),
+    PHOBOS(1/73.0, 6,1,"-", MARS),
+    JUPITER(1 / 560.0, 24, 2, "X", SUN),
+    SATURN(1 / 1230.0, 28, 2, "%", SUN),
+    TITAN(1/180.0, 4, 1, "~", SATURN),
+    IAPETUS(1/37.2, 6, 1, "*", SATURN),
+    NEPTUNE(1 / 2884.0, 32, 2, "&", SUN),
+    PLUTO(1 / 6420.0, 36, 2, "o", SUN);
 
 
     private final double CLOSE_DISTANCE = 0.5;
