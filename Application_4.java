@@ -17,9 +17,7 @@ public class Application_4 {
         outputView.askTimeSpeed();
         int timeSpeed = inputView.readTimeSpeed();
 
-        GUI gameView = new GUI();
-
-        //new Thread(gameView).start();
+        new GUI();
 
         while (true) {
             for (PlanetsGUI planet : PlanetsGUI.values()) {
