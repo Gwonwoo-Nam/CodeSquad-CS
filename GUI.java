@@ -1,11 +1,10 @@
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.time.LocalDate;
 import javax.swing.JFrame;
 
 
-public class GUI extends JFrame implements Runnable {
+public class GUI extends JFrame {
     Toolkit imageTool = Toolkit.getDefaultToolkit();
     public static String date="";
 
@@ -29,6 +28,9 @@ public class GUI extends JFrame implements Runnable {
     Image MARS = RAW_MARS.getScaledInstance(20,20, Image.SCALE_SMOOTH);
 
 
+    Image imgBuffer = null;
+    Graphics buffer = null;
+
     public GUI() {
         //GUI Frame 설정
         setTitle("Solar System");
@@ -40,29 +42,24 @@ public class GUI extends JFrame implements Runnable {
 
     @Override
     public void paint(Graphics g) {
-
-        g.clearRect(0,0, 640, 640);
-        //g.drawImage(GALAXY, 0, 0, null);
-        g.drawString(date,480,100);
-        g.drawImage(SUN, (int)PlanetsGUI.SUN.getXLocation(), (int)PlanetsGUI.SUN.getYLocation(), this);
-        g.drawImage(EARTH, (int)PlanetsGUI.EARTH.getXLocation(), (int)PlanetsGUI.EARTH.getYLocation(), this);
-        g.drawImage(MOON, (int)PlanetsGUI.MOON.getXLocation(), (int)PlanetsGUI.MOON.getYLocation(), this);
-        g.drawImage(VENUS, (int)PlanetsGUI.VENUS.getXLocation(), (int)PlanetsGUI.VENUS.getYLocation(), this);
-        g.drawImage(MERCURY, (int)PlanetsGUI.MERCURY.getXLocation(), (int)PlanetsGUI.MERCURY.getYLocation(), this);
-        g.drawImage(MARS, (int)PlanetsGUI.MARS.getXLocation(), (int)PlanetsGUI.MARS.getYLocation(), this);
+        imgBuffer = createImage(640,640);
+        buffer = imgBuffer.getGraphics();
+        update(g);
     }
-
 
     @Override
-    public void run() {
-        try {
-            while(true) {
-                repaint();
-                Thread.sleep(15);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    public void update(Graphics g) {
+        buffer.clearRect(0,0, 640, 640);
+        buffer.drawString(date,480,100);
+        buffer.drawImage(SUN, (int)PlanetsGUI.SUN.getXLocation(), (int)PlanetsGUI.SUN.getYLocation(), this);
+        buffer.drawImage(EARTH, (int)PlanetsGUI.EARTH.getXLocation(), (int)PlanetsGUI.EARTH.getYLocation(), this);
+        buffer.drawImage(MOON, (int)PlanetsGUI.MOON.getXLocation(), (int)PlanetsGUI.MOON.getYLocation(), this);
+        buffer.drawImage(VENUS, (int)PlanetsGUI.VENUS.getXLocation(), (int)PlanetsGUI.VENUS.getYLocation(), this);
+        buffer.drawImage(MERCURY, (int)PlanetsGUI.MERCURY.getXLocation(), (int)PlanetsGUI.MERCURY.getYLocation(), this);
+        buffer.drawImage(MARS, (int)PlanetsGUI.MARS.getXLocation(), (int)PlanetsGUI.MARS.getYLocation(), this);
 
+        //g.drawImage(GALAXY, 0, 0, null);
+        g.drawImage(imgBuffer,0,0,this);
+        repaint();
+    }
 }
