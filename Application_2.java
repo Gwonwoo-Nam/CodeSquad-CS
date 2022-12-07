@@ -1,8 +1,12 @@
 import java.time.LocalDate;
 import java.util.List;
 
-
+/**
+ * 2단계 구현
+ */
 public class Application_2 {
+    private static final int MAP_SIZE_X = 70;
+    private static final int MAP_SIZE_Y = 70;
 
     public static void main(String[] args) {
         OutputView outputView = new OutputView();
@@ -12,14 +16,11 @@ public class Application_2 {
         LocalDate inputDate;
         inputDate = inputView.readDate();
 
-        int mapSizeX = 50;
-        int mapSizeY = 50;
-        SolarMap.setXAxisMapSize(mapSizeX);
-        SolarMap.setYAxisMapSize(mapSizeY);
+        SolarMap.setXAxisMapSize(MAP_SIZE_X);
+        SolarMap.setYAxisMapSize(MAP_SIZE_Y);
 
         Planets.EARTH.rotate(inputDate);
         Planets.MOON.rotate(inputDate);
-
         Planets.SUN.draw();
         Planets.EARTH.draw();
         Planets.MOON.draw();

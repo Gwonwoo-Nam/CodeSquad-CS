@@ -41,8 +41,4 @@ public class SolarMap {
     public static void addMarker(String marker) {
         solarMap.add(marker);
     }
-
-    public static void clear() {
-        solarMap.clear();
-    }
 }

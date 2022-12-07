@@ -1,5 +1,7 @@
+/**
+ * 1단계 구현
+ */
 public class Application_1 {
-
     public static void main(String[] args) {
         OutputView outputView = new OutputView();
         InputView inputView = new InputView();

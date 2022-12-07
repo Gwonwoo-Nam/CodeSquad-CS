@@ -113,11 +113,4 @@ public enum Planets {
             yLocation = orbitalCircle.yLocation + (revolutionRadius * Math.cos(rotationAngle));
         }
     }
-/*
-    public double getXLocation() {
-        return xLocation;
-    }
-    public double getYLocation() {
-        return yLocation;
-    }*/
 }
