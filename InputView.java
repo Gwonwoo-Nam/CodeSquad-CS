@@ -8,8 +8,10 @@ import java.util.Scanner;
 public class InputView {
 
     final String INPUT_SIZE_ERROR_MESSAGE = "[ERROR] 1 이상 80 이하의 Size를 입력해주세요.";
+    final String TIME_SPEED_ERROR_MESSAGE = "[ERROR] 1 이상 9 이하의 배속을 입력해주세요.";
     final String DATE_SIZE_ERROR_MESSAGE = "[ERROR] 유효한 날짜를 입력해주세요.(예 : 1995년 7월 18일)";
     final String SIZE_REGEX = "^[1-9]{1}$|^[1-7]{1}[0-9]{1}$|^[8]{1}[0]{1}$";
+    final String TIME_SPEED_REGEX = "^[1-9]$";
     final String DATE_REGEX = "^\\d{1,4}[년][ ]*([1][0-2]|[1-9])[월][ ]*([1-9]|[12][0-9]|[3][01])[일]$";
 
     public int readSize() {
@@ -29,6 +31,15 @@ public class InputView {
                 if (date != null) {
                     return date;
                 }
+            }
+        }
+    }
+
+    public int readTimeSpeed() {
+        while (true) {
+            String inputString = readInput(TIME_SPEED_REGEX, TIME_SPEED_ERROR_MESSAGE);
+            if (inputString != null) {
+                return Integer.parseInt(inputString);
             }
         }
     }

@@ -14,18 +14,14 @@ public class Application_4 {
         LocalDate inputDate;
         inputDate = inputView.readDate();
 
-        int mapSizeX = 50;
-        int mapSizeY = 50;
-        SolarMap.setXAxisMapSize(mapSizeX);
-        SolarMap.setYAxisMapSize(mapSizeY);
+        outputView.askTimeSpeed();
+        int timeSpeed = inputView.readTimeSpeed();
 
         GUI gameView = new GUI();
 
-        new Thread(gameView).start();
+        //new Thread(gameView).start();
 
-
-        int i = 0;
-        while (i<1000) {
+        while (true) {
             for (PlanetsGUI planet : PlanetsGUI.values()) {
                 planet.rotate(inputDate);
                 planet.draw();
@@ -33,10 +29,9 @@ public class Application_4 {
 
             GUI.date = inputDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
 
-            TimeUnit.MILLISECONDS.sleep(100);
+            TimeUnit.MILLISECONDS.sleep(17);
 
-            inputDate = inputDate.plusDays(1);
-            i++;
+            inputDate = inputDate.plusDays(timeSpeed);
         }
     }
 }
