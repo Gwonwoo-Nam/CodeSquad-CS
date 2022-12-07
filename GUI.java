@@ -1,11 +1,13 @@
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.time.LocalDate;
 import javax.swing.JFrame;
+
 
 public class GUI extends JFrame implements Runnable {
     Toolkit imageTool = Toolkit.getDefaultToolkit();
+    public static String date="";
 
     Image GALAXY = imageTool.getImage("galaxy.jpg");
 
@@ -28,13 +30,12 @@ public class GUI extends JFrame implements Runnable {
 
 
     public GUI() {
+        //GUI Frame 설정
         setTitle("Solar System");
         setSize(640,640);
         setResizable(false);
-        setVisible(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        //setBackground(Color.blue);
-
+        setVisible(true);
     }
 
     @Override
@@ -42,6 +43,7 @@ public class GUI extends JFrame implements Runnable {
 
         g.clearRect(0,0, 640, 640);
         //g.drawImage(GALAXY, 0, 0, null);
+        g.drawString(date,480,100);
         g.drawImage(SUN, (int)PlanetsGUI.SUN.getXLocation(), (int)PlanetsGUI.SUN.getYLocation(), this);
         g.drawImage(EARTH, (int)PlanetsGUI.EARTH.getXLocation(), (int)PlanetsGUI.EARTH.getYLocation(), this);
         g.drawImage(MOON, (int)PlanetsGUI.MOON.getXLocation(), (int)PlanetsGUI.MOON.getYLocation(), this);
@@ -49,6 +51,7 @@ public class GUI extends JFrame implements Runnable {
         g.drawImage(MERCURY, (int)PlanetsGUI.MERCURY.getXLocation(), (int)PlanetsGUI.MERCURY.getYLocation(), this);
         g.drawImage(MARS, (int)PlanetsGUI.MARS.getXLocation(), (int)PlanetsGUI.MARS.getYLocation(), this);
     }
+
 
     @Override
     public void run() {

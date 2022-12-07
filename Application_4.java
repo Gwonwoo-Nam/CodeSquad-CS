@@ -1,13 +1,12 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
+
 
 
 public class Application_4 {
 
     public static void main(String[] args) throws InterruptedException {
-
-
-
         OutputView outputView = new OutputView();
         InputView inputView = new InputView();
 
@@ -20,10 +19,10 @@ public class Application_4 {
         SolarMap.setXAxisMapSize(mapSizeX);
         SolarMap.setYAxisMapSize(mapSizeY);
 
-
-
         GUI gameView = new GUI();
+
         new Thread(gameView).start();
+
 
         int i = 0;
         while (i<1000) {
@@ -31,6 +30,8 @@ public class Application_4 {
                 planet.rotate(inputDate);
                 planet.draw();
             }
+
+            GUI.date = inputDate.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일"));
 
             TimeUnit.MILLISECONDS.sleep(100);
 
