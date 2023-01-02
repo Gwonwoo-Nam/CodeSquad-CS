@@ -26,6 +26,11 @@ class TestApplication {
         convertor.printDec(bin2decTestAnswer1);
         convertor.printDec(bin2decMyAnswer2);
         convertor.printDec(bin2decTestAnswer2);
+
+        boolean[] a = convertor.dec2bin(91);//{true, true, false, true, true, false, true, false}
+        boolean[] b = convertor.dec2bin(205);//{true, false, true, true, false, false, true, true}
+        convertor.printBin(convertor.sumBinary(a, b));
+        System.out.println(convertor.bin2dec(convertor.sumBinary(a, b)));
     }
 
 

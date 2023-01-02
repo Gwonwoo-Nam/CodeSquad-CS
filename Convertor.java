@@ -47,6 +47,93 @@ class Convertor {
        return (int)Math.pow(2,index);
     }
 
+    public boolean[] sumBinary(boolean[] a, boolean[] b) {
+        boolean[] sum = xorBooleans(a, b);
+        boolean[] carry = shiftRight(andBooleans(a, b));
+        if (isZero(carry)) {
+            return sum;
+        }
+        return sumBinary(carry, sum);
+    }
+    private boolean[] andBooleans(boolean[] a, boolean[] b) {
+        int minLength = Math.min(a.length, b.length);
+        boolean[] result = new boolean[minLength];
+        for (int i = 0; i < minLength; i++) {
+            result[i] = a[i] & b[i];
+        }
+        result = trim(result);
+        return result;
+    }
+
+    private boolean[] xorBooleans(boolean[] a, boolean[] b) {
+        int minLength = Math.min(a.length, b.length);
+        int maxLength = Math.max(a.length, b.length);
+        boolean[] result = new boolean[maxLength];
+        for (int i = 0; i < minLength; i++) {
+            result[i] = a[i] ^ b[i];
+        }
+        sumRest(a, minLength, result);
+        sumRest(b, minLength, result);
+
+        result = trim(result);
+        return result;
+        }
+
+    /**
+    * 사이즈가 큰 경우 트리밍
+    */
+
+    private void sumRest(boolean[] a, int minLength, boolean[] result) {
+        if (a.length > minLength) {
+            for (int i = minLength; i < a.length; i++) {
+                result[i] = a[i];
+            }
+        }
+    }
+
+    /**
+    * 비트 빈 값 Trim
+    */
+
+    private boolean[] trim(boolean[] bin) {
+        int trimCount = 0;
+        for (int index = bin.length - 1; index >= 0; index--) {
+            if (bin[index] == true) {
+                break ;
+            }
+            trimCount++;
+        }
+        boolean[] result = new boolean[bin.length - trimCount];
+        for (int index = 0; index < bin.length - trimCount; index++) {
+            result[index] = bin[index];
+        }
+        return result;
+    }
+    
+    /**
+    * 비트 Shift 연산 구현
+    */
+
+    private boolean[] shiftRight(boolean[] bin) {
+        boolean[] result = new boolean[bin.length + 1];
+        result[0] = false;
+        for (int i = 0; i < bin.length; i++) {
+            result[i+1] = bin[i];
+        }
+        return result;
+    }
+
+    private boolean isZero(boolean[] bin) {
+        int sum = 0;
+        for (int index = 0; index < bin.length; index++) {
+            sum += power(index) * toInt(bin[index]);
+        }
+        return (sum == 0);
+    }
+    /**
+         * 출력 관련 함수
+    */
+
     public void printBin(boolean[] bin) {
         System.out.println(Arrays.toString(bin));
     }
