@@ -2,19 +2,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ClassicConvertor {
-    final static int MAX_SIZE = 8;
+    final static int MAX_ARRAY_SIZE = 9;
+    final static int MAX_NUMBER_SIZE = 8;
     final static int CARRY = 1;
     final static int SUM = 0;
 
     public boolean[] sumBinary(boolean[] a, boolean[] b) {
-        boolean[] result = new boolean[9];
+        boolean[] result = new boolean[MAX_ARRAY_SIZE];
         a = init(a);
         b = init(b);
 
         List<Boolean> output = halfAdder(a[0], b[0]);
         boolean carryIn = output.get(CARRY);
         result[0] = output.get(SUM);
-        for (int index = 1; index < MAX_SIZE; index++) {
+
+        for (int index = 1; index < MAX_NUMBER_SIZE; index++) {
             output = fullAdder(a[index], b[index], carryIn);
             result[index] = output.get(SUM);
             carryIn = output.get(CARRY);
@@ -25,7 +27,7 @@ public class ClassicConvertor {
     }
 
     private boolean[] init(boolean[] input) {
-        boolean[] inputNew = new boolean[9];
+        boolean[] inputNew = new boolean[MAX_ARRAY_SIZE];
 
         for (int index = 0; index < input.length; index++) {
             inputNew[index] = input[index];
