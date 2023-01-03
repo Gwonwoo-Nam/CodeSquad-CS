@@ -55,6 +55,7 @@ class Convertor {
         }
         return sumBinary(carry, sum);
     }
+
     private boolean[] andBooleans(boolean[] a, boolean[] b) {
         int minLength = Math.min(a.length, b.length);
         boolean[] result = new boolean[minLength];
@@ -80,7 +81,7 @@ class Convertor {
         }
 
     /**
-    * 사이즈가 큰 경우 트리밍
+    * 사이즈가 다른 경우 나머지 XOR 연산
     */
 
     private void sumRest(boolean[] a, int minLength, boolean[] result) {

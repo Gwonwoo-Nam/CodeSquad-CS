@@ -31,6 +31,10 @@ class TestApplication {
         boolean[] b = convertor.dec2bin(205);//{true, false, true, true, false, false, true, true}
         convertor.printBin(convertor.sumBinary(a, b));
         System.out.println(convertor.bin2dec(convertor.sumBinary(a, b)));
+
+        ClassicConvertor classicConvertor = new ClassicConvertor();
+        convertor.printBin(classicConvertor.sumBinary(a,b));
+
     }
 
 
