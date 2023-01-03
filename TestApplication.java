@@ -35,6 +35,9 @@ class TestApplication {
         ClassicConvertor classicConvertor = new ClassicConvertor();
         convertor.printBin(classicConvertor.sumBinary(a,b));
 
+        boolean[] c = convertor.dec2bin(33);
+        System.out.println(convertor.bin2Byte(b));
+
     }
 
 

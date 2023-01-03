@@ -110,7 +110,7 @@ class Convertor {
         }
         return result;
     }
-    
+
     /**
     * 비트 Shift 연산 구현
     */
@@ -131,6 +131,23 @@ class Convertor {
         }
         return (sum == 0);
     }
+
+    /**
+     * binary to byte
+     */
+    public String bin2Byte(boolean[] bin) {
+        String byteArray = "0123456789ABCDEF";
+        char[] hex = new char[17];
+        byteArray.getChars(0,16,hex,0);
+
+        char[] result = new char[bin.length/4];
+        for (int i = 0; i<bin.length/4; i++) {
+            int hexIndex = toInt(bin[4*i]) + 2* toInt(bin[4*i+1]) + 4* toInt(bin[4*i+2]) + 8* toInt(bin[4*i+3]);
+            result[i] = hex[hexIndex];
+        }
+        return String.valueOf(result);
+    }
+
     /**
          * 출력 관련 함수
     */
