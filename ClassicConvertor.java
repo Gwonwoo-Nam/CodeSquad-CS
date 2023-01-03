@@ -36,8 +36,8 @@ public class ClassicConvertor {
     }
 
     private List<Boolean> halfAdder(boolean a, boolean b) {
-        final boolean sum = a ^ b; //SUM은 XOR
-        final boolean carry = a & b; //CARRY는 AND
+        final boolean sum = (a != b); //SUM은 XOR
+        final boolean carry = a && b; //CARRY는 AND
         List<Boolean> output = new LinkedList<>();
         output.add(sum);
         output.add(carry);
@@ -45,8 +45,8 @@ public class ClassicConvertor {
     }
 
     private List<Boolean> fullAdder(boolean a, boolean b, boolean cin) {
-        final boolean sum = a ^ b ^ cin; //SUM은 XOR
-        final boolean carry = (a & b) | (b & cin) | (cin & a); //CARRY는 (A&B) OR (B&C) OR (C&A)
+        final boolean sum = ((a != b) != cin); //SUM은 XOR
+        final boolean carry = (a && b) || (b && cin) || (cin && a); //CARRY는 (A&B) OR (B&C) OR (C&A)
         List<Boolean> output = new LinkedList<>();
         output.add(sum);
         output.add(carry);
