@@ -24,6 +24,20 @@ public class Mission2Main {
                     videoLinkedList.add(videoRepository.getNodeByID(id));
                     View.printList(videoLinkedList);
                 }
+                if (command.substring(0, 6).equals("delete")) {
+                    String id = command.substring(7);
+                    videoLinkedList.delete(videoRepository.getNodeByID(id));
+                    View.printList(videoLinkedList);
+                }
+                if (command.matches("^insert [abcdef]* [0-9]$")) {//regex 확인
+                    String id = command.substring(7,11);
+                    int index = Integer.parseInt(command.substring(12));
+                    videoLinkedList.insert(videoRepository.getNodeByID(id),index);
+                    View.printList(videoLinkedList);
+                }
+                if (command.matches("^render$")) {//regex 확인
+                    videoLinkedList.render();
+                }
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }

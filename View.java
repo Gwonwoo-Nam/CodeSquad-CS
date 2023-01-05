@@ -12,6 +12,10 @@ public class View {
 
     public static void printList(VideoLinkedList videoLinkedList) {
         VideoNode currentNode = videoLinkedList.get(0);
+        if (currentNode == null) {
+            System.out.println("empty");
+            return ;
+        }
         System.out.print("|---[");
         System.out.print(currentNode.getName()+", "+currentNode.getPlayTime()+"sec"+"]---[");
         while(currentNode.getNext() != null){

@@ -22,13 +22,13 @@ public class VideoRepository {
     }
 
     public VideoNode getNodeByIndex(int index) {
-        return videoList[index];
+        return new VideoNode(videoList[index]);//복사해서 반환
     }
 
     public VideoNode getNodeByID(String id) {
         for (int i = 0; i < videoList.length; i++) {
             if (videoList[i].getId().equals(id)) {
-                return videoList[i];
+                return new VideoNode(videoList[i]);
             }
         }
         throw new IllegalArgumentException("node not exist");
