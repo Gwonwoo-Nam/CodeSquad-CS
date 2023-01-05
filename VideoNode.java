@@ -10,6 +10,7 @@ public class VideoNode {
         setId();
         setRandomPlayTime();
         setName();
+
     }
     private void setId() { //Random 방식으로 id 할당, (a~f 중)4개의 random을 뽑고 중복이 없으면 return
         while (true) {
