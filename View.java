@@ -10,6 +10,18 @@ public class View {
                         + SECONDS);
     }
 
+    public static void printList(VideoLinkedList videoLinkedList) {
+        VideoNode currentNode = videoLinkedList.get(0);
+        System.out.print("|---[");
+        System.out.print(currentNode.getName()+", "+currentNode.getPlayTime()+"sec"+"]---[");
+        while(currentNode.getNext() != null){
+            currentNode = currentNode.getNext();
+            System.out.print(currentNode.getName()+", "+currentNode.getPlayTime()+"sec"+"]---[");
+
+        }
+        System.out.println("end]");
+    }
+
     public static void printMessage() {
         System.out.println(CREATE_CLIP_MESSAGE);
     }

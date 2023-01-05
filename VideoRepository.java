@@ -21,6 +21,19 @@ public class VideoRepository {
         return idList;
     }
 
+    public VideoNode getNodeByIndex(int index) {
+        return videoList[index];
+    }
+
+    public VideoNode getNodeByID(String id) {
+        for (int i = 0; i < videoList.length; i++) {
+            if (videoList[i].getId().equals(id)) {
+                return videoList[i];
+            }
+        }
+        throw new IllegalArgumentException("node not exist");
+    }
+
 }
 
 

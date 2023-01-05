@@ -4,7 +4,7 @@ public class VideoNode {
     private String id; // 고유한 id 값(8자리)
     private String name; //제목 문구(8자리)
     private int playTime; //영상 재생 시간(8자리 이내 정수형, 초단위)
-    private VideoArrayList next = null; //다음 영상 정보에 대한 연결
+    private VideoNode next = null; //다음 영상 정보에 대한 연결
 
     public VideoNode() {
         setId();
@@ -18,9 +18,9 @@ public class VideoNode {
             for (int i =0; i<4;i++) {
                 randomID.append((char)(Math.random()*6 + 'a'));
             }
-            if (!VideoArrayList.getIdList().contains(id)) {
+            if (!VideoRepository.getIdList().contains(randomID)) {
                 id = randomID.toString();
-                VideoArrayList.addIdList(id);
+                VideoRepository.addIdList(id);
                 break ;
             }
         }
@@ -35,6 +35,10 @@ public class VideoNode {
         nodeCounter++;
     }
 
+    public void setNext(VideoNode videoNode) {
+        this.next = videoNode;
+    }
+
     public String getName() {
         return name;
     }
@@ -45,5 +49,9 @@ public class VideoNode {
 
     public String getId() {
         return id;
+    }
+
+    public VideoNode getNext() {
+        return next;
     }
 }
