@@ -6,8 +6,8 @@ public class VideoArrayList {
 
     public VideoArrayList(int number) {
         for (int i=0;i<number;i++) {
-            //View.printResult(new VideoNode());
-            System.out.println(Long.toHexString(System.identityHashCode(new VideoNode())));
+            View.printResult(new VideoNode());
+            //System.out.println(Long.toHexString(System.identityHashCode(new VideoNode())));
         }
     }
 
