@@ -153,23 +153,23 @@ aafe: 0x8
 
 ### 학습 목표
 
-- [ ] 영상 데이터 구조를 연결하는 연결리스트LinkedList를 구현한다.
-- [ ] 링크드 리스트에 영상 데이터를 원하는 위치에 넣거나 삭제하는 동작을 구현한다.
-- [ ] 전체 링크드 리스트를 탐색해서 최종 영상 정보를 표시한다.
-- [ ] Array 나 List 를 사용하지 않고 직접 데이터 구조만 사용해서 구현해야 한다.
+- [O] 영상 데이터 구조를 연결하는 연결리스트LinkedList를 구현한다.
+- [O] 링크드 리스트에 영상 데이터를 원하는 위치에 넣거나 삭제하는 동작을 구현한다.
+- [O] 전체 링크드 리스트를 탐색해서 최종 영상 정보를 표시한다.
+- [O] Array 나 List 를 사용하지 않고 직접 데이터 구조만 사용해서 구현해야 한다.
 
 ### 학습 내용
 
 <details>
 <summary>자료 구조에서 지원하는 연산들</summary>
 
-- 선회 :
-- 찾기 :
-- 삽입 :
-- 삭제 :
+- 선회 : 
+- 찾기 : get 
+- 삽입 : add, insert
+- 삭제 : delete
 - 정렬 :
 - 병합 :
-- 기타 :
+- 기타 : render
 
 </details>
 <details>
@@ -190,11 +190,52 @@ aafe: 0x8
 
 </details>
 <details>
-<summary>Big O란?</summary>
+<summary>점근 표기법(시간 복잡도, 공간 복잡도)</summary>
+
+- 시간 복잡도를 나타내기 위한 표기법 : 알고리즘의 효율성을 표기해주는 표기법, 기본 연산의 횟수
+  - Big-O : 최대의 시간이 걸리는 경우를 가정한다.(최악의 경우)
+  - Big-Omega : 최소의 시간이 걸리는 경우
+  - Big-Theta : 평균적인 시간을 계산한다.
+  - 빅오 표기법이 알고리즘 효율성을 상한을 기준으로 표기하기 때문에 필요한 최소한의 리소스 파악에 유리하다.
+  - 최악 이상이라는 의미이지, 최악의 경우와 같은 의미는 아니다.
+
+- Big O의 수학적 정의
+  - ![img_1.png](img_1.png)
+  - 어떤 n 이상의 값과 k값에 대해서 사용자 함수의 f(n)이 작거나 같게 만들수 있으면 빅오 표기법을 사용할 수 있다.
+- Big O의 특징
+  - 상수항 무시 : n이 충분히 크다는 가정 하에 사용하므로 가장 큰 차수 제외 무시한다.
+  - 1 < log(n) < n < nlog(n) < n^2 < 2^n 등
 
 </details>
 <details>
 <summary>Big O 확인하기</summary>
+
+- add, insert
+  - 반복문은 n개의 요소가 있다고 했을 시 tail의 요소를 찾는 경우가 발생하고 시간 복잡도는 O(n)이다.
+```
+public void add(VideoNode videoNode) { //node만 입력하는 경우 addLast 실행
+        if (addIfNull(videoNode))
+            return;
+        VideoNode currentNode = head;
+        while(currentNode.getNext() != null) {
+            currentNode = currentNode.getNext();
+        }
+        currentNode.setNext(videoNode);
+    }
+```
+
+- delete
+  - 마찬가지로 끝에 있는 요소에 접근할 시 O(n)만큼의 시간 복잡도가 발생한다.
+```
+while(currentNode.getNext() != null) {
+            String nextNodeId = currentNode.getNext().getId();
+            if (nextNodeId.equals(videoNode.getId())) {//다음 노드가 삭제하려는 노드의 이름과 같다면
+                currentNode.setNext(currentNode.getNext().getNext());//다다음 노드를 다음으로 설정
+                return ;
+            }
+            currentNode = currentNode.getNext();
+        }
+```
 
 </details>
 

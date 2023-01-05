@@ -1,8 +1,8 @@
 public class VideoLinkedList {
     private VideoNode head = null;
 
-    public void add(VideoNode videoNode) {
-        if (addHead(videoNode))
+    public void add(VideoNode videoNode) { //node만 입력하는 경우 addLast 실행
+        if (addIfNull(videoNode))
             return;
         VideoNode currentNode = head;
         while(currentNode.getNext() != null) {
@@ -11,7 +11,7 @@ public class VideoLinkedList {
         currentNode.setNext(videoNode);
     }
 
-    private boolean addHead(VideoNode videoNode) {
+    private boolean addIfNull(VideoNode videoNode) { //null일때 add
         if(head == null) {
             head = videoNode;
             return true;
@@ -19,14 +19,14 @@ public class VideoLinkedList {
         return false;
     }
 
-    public void insert(VideoNode videoNode, int index) {
-        if(addHead(videoNode)) { //빈 리스트인 경우
+    public void add(VideoNode videoNode, int index) { //일반적인 경우
+        if(addIfNull(videoNode)) { //빈 리스트인 경우
             return ;
         }
         VideoNode currentNode = head;
+        //가장 앞에 추가하는 경우 addFirst
         if (index == 0) {
-            videoNode.setNext(currentNode);
-            head = videoNode;
+            addFirst(videoNode, currentNode);
             return ;
         }
         while(--index!=0 && currentNode.getNext() != null) {
@@ -34,6 +34,11 @@ public class VideoLinkedList {
         }
         videoNode.setNext(currentNode.getNext());
         currentNode.setNext(videoNode);
+    }
+
+    private void addFirst(VideoNode videoNode, VideoNode currentNode) {
+        videoNode.setNext(currentNode);
+        head = videoNode;
     }
 
     public void delete(VideoNode videoNode) {
@@ -64,18 +69,19 @@ public class VideoLinkedList {
     public void render() {
         int numberOfClip = 0;
         int totalPlayTime = 0;
-        VideoNode currentNode = head;
-        if (head != null) {
-            numberOfClip++;
-            totalPlayTime += head.getPlayTime();
+        if (head == null) {
+            View.printRendering(numberOfClip, totalPlayTime);
+            return ;
         }
+        VideoNode currentNode = head;
+        numberOfClip++;
+        totalPlayTime += head.getPlayTime();
         while(currentNode.getNext() != null) {
             currentNode = currentNode.getNext();
             numberOfClip++;
             totalPlayTime += currentNode.getPlayTime();
         }
-        System.out.println("영상클립: "+numberOfClip+"개");
-        System.out.println("전체길이: "+totalPlayTime+"sec");
+        View.printRendering(numberOfClip, totalPlayTime);
     }
 
     public VideoNode get(int index) {

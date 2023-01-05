@@ -3,6 +3,7 @@ import java.util.List;
 
 public class VideoRepository {
 
+
     private static List<String> idList = new ArrayList<>();
     private VideoNode[] videoList;
 
@@ -31,7 +32,7 @@ public class VideoRepository {
                 return new VideoNode(videoList[i]);
             }
         }
-        throw new IllegalArgumentException("node not exist");
+        throw new IllegalArgumentException(View.NODE_NOT_EXIST);
     }
 
 }

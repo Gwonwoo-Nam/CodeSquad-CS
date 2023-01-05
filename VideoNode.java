@@ -1,5 +1,6 @@
 public class VideoNode {
 
+    public static final String TITLE = "제목";
     private static int nodeCounter = 1;
     private String id; // 고유한 id 값(8자리)
     private String name; //제목 문구(8자리)
@@ -37,7 +38,7 @@ public class VideoNode {
     }
 
     private void setName() {
-        this.name = "제목"+VideoNode.nodeCounter;
+        this.name = TITLE +VideoNode.nodeCounter;
         nodeCounter++;
     }
 
