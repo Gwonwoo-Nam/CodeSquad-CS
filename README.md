@@ -52,6 +52,11 @@ public VideoArrayList(int number) {
     }
 ```
 
+</details>
+<details>
+<summary>연속 메모리 상에 있는지 조회하기</summary>
+
+
 그리고, 아래 메모리 주소 확인하는 라이브러리로 객체의 메모리가 과연 연속으로 존재하는지 조회하였는데 일단 불연속적으로 존재한다는 결론을 내렸다. 메모리를 연속으로 배치할 수 있는 방법이 따로 있는건지 확인이 필요하다.
 ```
 // 객체의 주소 확인 명령어 : System.identityHashCode();
@@ -71,13 +76,6 @@ public VideoArrayList(int number) {
 27bc2616
 3941a79c
 ```
-
-</details>
-<details>
-<summary>연속 메모리 상에 있는지 조회하기</summary>
-</details>
-<details>
-<summary>정해진 크기 단위로 접근해서 탐색하기</summary>
 </details>
 
 ### 프로그래밍 요구사항
