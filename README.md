@@ -62,8 +62,9 @@
 따라서, 객체의 배열의 경우 객체를 참조하는 변수(4byte)는 stack 영역에 생성되며, 동적 할당되는 객체의 인스턴스 배열은 heap 영역에 연속적으로 생성된다.
 </details>
 <details>
-<summary>연속 메모리를 차지하게 생성하기</summary>
+<summary>연속 메모리를 차지하게 생성하고 조회할 수 있을까?</summary>
 
+### 연속 메모리 상에 생성하기
 처음에는 정보를 가지는 각 인스턴스들의 배열로 선언하려고 했는데, 문제의 제약 조건 중 배열에 저장하지 말라는 조건이 있어, 저장하지 않고 반복문으로 인스턴스 생성 후 바로 출력하도록 처리하였다. 반복적으로 생성했을
 때 메모리 상에서 연속적으로 존재할 것이며, 배열을 저장하지 않는다는 조건도 만족할 수 있었다.
 
@@ -76,10 +77,8 @@ public VideoArrayList(int number) {
 ```
 
 정확하게는 그렇다고 여기까지 생각했었다.
-</details>
-<details>
-<summary>연속 메모리 상에 있는지 조회하기</summary>
 
+### 연속 메모리 상에 있는지 조회하기
 그리고, 아래 hash code 확인하는 라이브러리로 객체의 메모리가 과연 연속으로 존재하는지 조회하였는데 일단 불연속적으로 존재한다는 결론을 내렸다.
 
 ```
@@ -134,6 +133,59 @@ baee: 0x8
 aafe: 0x8
 ```
 
+</details>
+
+<details>
+<summary>ArrayList는 어떻게 동적으로 늘어날까?</summary>
+
+### Array와 ArrayList의 차이
+  - Array는 크기가 고정되어있는 정적배열, arrayList는 동적 배열이다.
+  - Array는 Object와 primitive를 다 담을 수 있지만, arrayList는 object만 담을 수 있다.
+  - Array는 제네릭을 사용할 수 없고, arrayList는 사용할 수 있다.
+  - Array는 길이에 대해 배열은 length 변수, arrayList는 size() 메서드를 사용한다.
+  - Array는 element를 할당(대입)하고, arrayList는 add()로 삽입한다.
+
+### 동적으로 할당시키는 원리
+- Array의 index 마지막에 요소를 삽입하는 경우 O(1)라고 했는데, 배열의 크기를 바꿔야하는데도 불구하고 한번의 연산으로 어떻게 add할 수 있는지 의문점이 생겼다.
+- 결론은, array는 클라이언트에 보여주는 size와 내부 저장 array의 length를 다르게 가지고 있었다.
+  - 예를 들면, 3개의 원소를 가지고 있는 ArrayList numbers가 있다고 가정해보자. {1,2,3}
+  - numbers.size()를 호출하면 size=3이 클라이언트에게 보이지만 실제로 생성자는 최소 Capacity인 10의 length 배열을 생성한다.
+  - 그리고 size가 length와 같아질 때 현재 Capacity + 1/2 현재 Capacity만큼의 새로운 배열을 생성하고 원래 원소를 복사해 옮긴다.
+ 
+코드를 보자. add 메서드를 호출하면 size와 내부 array의 length를 비교한다. 같은 경우 grow 메서드를 호출해서 동적으로 용량을 키울 것이다.
+```
+public boolean add(E e) {
+        modCount++;
+        add(e, elementData, size);
+        return true;
+    }
+    
+private void add(E e, Object[] elementData, int s) {
+        if (s == elementData.length)
+            elementData = grow();
+        elementData[s] = e;
+        size = s + 1;
+    }
+```
+newCapacity = size+1 + oldCapacity >> 1로 계산되는 것을 확인할 수 있다.
+
+```
+    private Object[] grow() {
+        return grow(size + 1);
+    }
+    
+    private Object[] grow(int minCapacity) {
+        int oldCapacity = elementData.length;
+        if (oldCapacity > 0 || elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA) {
+            int newCapacity = ArraysSupport.newLength(oldCapacity,
+                    minCapacity - oldCapacity, /* minimum growth */
+                    oldCapacity >> 1           /* preferred growth */);
+            return elementData = Arrays.copyOf(elementData, newCapacity);
+        } else {
+            return elementData = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
+        }
+    }
+```
 </details>
 
 ### 프로그래밍 요구사항
@@ -205,6 +257,11 @@ aafe: 0x8
 - Big O의 특징
   - 상수항 무시 : n이 충분히 크다는 가정 하에 사용하므로 가장 큰 차수 제외 무시한다.
   - 1 < log(n) < n < nlog(n) < n^2 < 2^n 등
+  - 이진 탐색 : log n - 데이터의 개수 n = 2^(탐색 수 x) -> 탐색 수 x = log n
+  - 단순 탐색 : n
+  - 퀵 정렬 : nlogn
+  - 선택 정렬 : n^2
+  - 외판원 문제 : n!
 
 </details>
 <details>

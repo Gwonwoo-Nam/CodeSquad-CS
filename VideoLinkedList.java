@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class VideoLinkedList {
     private VideoNode head = null;
 
@@ -10,6 +13,7 @@ public class VideoLinkedList {
         }
         currentNode.setNext(videoNode);
     }
+
 
     private boolean addIfNull(VideoNode videoNode) { //null일때 add
         if(head == null) {
