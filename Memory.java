@@ -10,11 +10,27 @@ public class Memory {
         return data[address];
     }
 
-    public void setData() {
-        data[0] = 4739;
-        data[1] = 15044;
-        data[2] = 11966; //LOAD R7 R2 #30
-        data[5] = 11;
+    public void set(char address, char value) {
+        data[address] = value;
+    }
 
+    public char bin2Char(String binary) {
+        binary = binary.replaceAll(" ", "");
+        char sum = 0;
+        for (int i = 0; i < binary.length(); i++) {
+            sum = (char)(2 * sum + (binary.charAt(i) - '0'));
+        }
+        return sum;
+    }
+
+    public void print() {
+        System.out.println("--- 메모리 영역 출력 --- \nAddr\t:\tData");
+        for (int i =0;i<data.length;i++) {
+            StringBuffer toHex = new StringBuffer(Integer.toBinaryString(data[i]));
+            while (toHex.length() != 16) {
+                toHex.insert(0,0);
+            }
+            System.out.println(i +"\t : \t" + toHex);
+        }
     }
 }

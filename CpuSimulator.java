@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class CpuSimulator {
     public Register[] registers; // 8개의 레지스터 생성
     private ProgramCounter programCounter;
@@ -11,8 +9,8 @@ public class CpuSimulator {
     private ControlUnit controlUnit;
 
     public CpuSimulator(Memory memory) {
-        registers = new Register[8];
-        for (int index = 0; index < 8; index++) {
+        registers = new Register[7];
+        for (int index = 0; index < 7; index++) {
             registers[index] = new Register((char)index);
         }
         programCounter = new ProgramCounter();
@@ -22,7 +20,7 @@ public class CpuSimulator {
     }
 
     public void reset() {
-        for (int index = 1; index < 8; index++) {
+        for (int index = 0; index < 7; index++) {
             registers[index].set((char)0);
         }
         bufferRegister.set((char)0);
@@ -32,9 +30,13 @@ public class CpuSimulator {
     }
 
     public void runPipeLine() {
-        fetch(); //명령을 가져와서 memory buffer 레지스터에 등록
-        commandRegister.set(decode(bufferRegister)); //buffer 레지스터의 명령을 해석해서 instruction을 명령어 레지스터에 저장
-        execute();
+        while (true) {
+            fetch(); //명령을 가져와서 memory buffer 레지스터에 등록
+            commandRegister.value = bufferRegister.value; //buffer 레지스터의 명령을 해석해서 instruction을 명령어 레지스터에 저장
+            if (!execute()) {
+                break;
+            }
+        }
     }
 
     private void fetch() {
@@ -42,44 +44,111 @@ public class CpuSimulator {
         programCounter.increment(); //16비트 증가
     }
 
-    private char decode(Register bufferRegister) {
-        return bufferRegister.get(0, 3);
-    }
-
-    private void execute() {
-        if (commandRegister.get() == (char)1) {
-            loadByOffset();
+    private boolean execute() {
+        if (commandRegister.get(0, 3) == (char)1) {
+            loadByOffset(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            return true;
         }
-        if (commandRegister.get() == (char)2) {
-            loadByValue();
-        }/*
-        if (bufferRegister.get(0, 3) == (char)4) {
-            executeAnd();
+        if (commandRegister.get(0, 3) == (char)2) {
+            loadByValue(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(11, 15));
+            return true;
         }
-        if (bufferRegister.get(0, 3) == (char)5) {
-            executeOr();
-        }*/
+        if (commandRegister.get(0, 3) == (char)3) {
+            storeByOffset(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            return true;
+        }
+        if (commandRegister.get(0, 3) == (char)4) {
+            storeByValue(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(11, 15));
+            return true;
+        }
+        if (commandRegister.get(0, 3) == (char)5) {
+            and(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            return true;
+        }
+        if (commandRegister.get(0, 3) == (char)6) {
+            or(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            return true;
+        }
+        if (commandRegister.get(0, 3) == (char)7) {
+            addByOffset(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            return true;
+        }
+        if (commandRegister.get(0, 3) == (char)8) {
+            addByValue(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(11, 15));
+            return true;
+        }
+        if (commandRegister.get(0, 3) == (char)9) {
+            subByOffset(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            return true;
+        }
+        if (commandRegister.get(0, 3) == (char)10) {
+            subByValue(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(11, 15));
+            return true;
+        }
+        if (commandRegister.get(0, 3) == (char)11) {
+            mov(bufferRegister.get(4, 6), bufferRegister.get(7, 15));
+            return true;
+        }
+        return false;
     }
 
-    private void loadByOffset() {
-        addressRegister.set((char)(bufferRegister.get(7, 9) + bufferRegister.get(13, 15))); // 버퍼 레지스터에 저장된 주소 값을 주소 레지스터에 저장
-        bufferRegister.set(memory.get(addressRegister.get())); //주소 레지스터에 해당하는 메모리 값을 불러와 버퍼 레지스터에 저장
-        controlUnit.setAccumulator(bufferRegister.get()); //버퍼 레지스터에 저장된 값을 누산기에 저장
-        registers[bufferRegister.get(4, 6)].set(bufferRegister.get()); //dest.reg에 저장
+    private void loadByOffset(char destReg, char baseReg, char offsetReg) {
+        addressRegister.value = (char)(registers[baseReg - 1].value +
+                registers[offsetReg - 1].value); // 버퍼 레지스터에 저장된 주소 값을 주소 레지스터에 저장
+        bufferRegister.value = memory.get(addressRegister.value); //주소 레지스터에 해당하는 메모리 값을 불러와 버퍼 레지스터에 저장
+        registers[destReg - 1].value = bufferRegister.value; //dest.reg에 저장
     }
 
-    private void loadByValue() {
-        addressRegister.set((char)(bufferRegister.get(7, 9) + bufferRegister.get(11, 15))); // 버퍼 레지스터에 저장된 주소 값을 주소 레지스터에 저장
-        bufferRegister.set(memory.get(addressRegister.get())); //주소 레지스터에 해당하는 메모리 값을 불러와 버퍼 레지스터에 저장
-        controlUnit.setAccumulator(bufferRegister.get()); //버퍼 레지스터에 저장된 값을 누산기에 저장
-        registers[bufferRegister.get(4, 6)].set(bufferRegister.get()); //dest.reg에 저장
+    private void loadByValue(char destReg, char baseReg, char offsetVal) {
+        addressRegister.value = (char)(registers[baseReg - 1].value + offsetVal); // 버퍼 레지스터에 저장된 주소 값을 주소 레지스터에 저장
+        bufferRegister.value = memory.get(addressRegister.value); //주소 레지스터에 해당하는 메모리 값을 불러와 버퍼 레지스터에 저장
+        registers[destReg - 1].value = bufferRegister.value; //dest.reg에 저장
+    }
+
+    private void storeByOffset(char srcReg, char baseReg, char offsetReg) {
+        addressRegister.value = (char)(registers[baseReg - 1].value + registers[offsetReg - 1].value);
+        bufferRegister.value = registers[srcReg - 1].value; // 주소 레지스터에 저장할 데이터의 주소를 저장
+        memory.set(addressRegister.value, bufferRegister.value); //주소 레지스터에 해당하는 메모리 값을 불러와 버퍼 레지스터에 저장
+    }
+
+    private void storeByValue(char srcReg, char baseReg, char offsetVal) {
+        addressRegister.value = (char)(registers[baseReg - 1].value + offsetVal);
+        bufferRegister.value = registers[srcReg - 1].value; // 주소 레지스터에 저장할 데이터의 주소를 저장
+        memory.set(addressRegister.value, bufferRegister.value); //주소 레지스터에 해당하는 메모리 값을 불러와 버퍼 레지스터에 저장
+    }
+
+    private void and(char destReg, char opReg1, char opReg2) {
+        registers[destReg - 1].value = (char)alu.and(registers[opReg1-1].value, registers[opReg2-1].value);
+    }
+
+    private void or(char destReg, char opReg1, char opReg2) {
+        registers[destReg - 1].value = (char)alu.or(registers[opReg1-1].value, registers[opReg2-1].value);
+    }
+
+    private void addByOffset(char destReg, char opReg1, char opReg2) {
+        registers[destReg - 1].value = (char)alu.add(registers[opReg1-1].value, registers[opReg2-1].value);
+    }
+
+    private void addByValue(char destReg, char opReg, char opVal) {
+        registers[destReg - 1].value = (char)alu.add(registers[opReg-1].value, opVal);
+    }
+    private void subByOffset(char destReg, char opReg1, char opReg2) {
+        registers[destReg - 1].value = (char)alu.sub(registers[opReg1-1].value, registers[opReg2-1].value);
+    }
+
+    private void subByValue(char destReg, char opReg, char opVal) {
+        registers[destReg - 1].value = (char)alu.sub(registers[opReg-1].value, opVal);
+    }
+
+    private void mov(char destReg, char opVal) {
+        registers[destReg - 1].value = opVal;
     }
 
     public int[] dump() {
-        int[] values = new int[8];
+        int[] values = new int[7];
         //values = Arrays.stream(registers).mapToInt(Register::get).toArray();
-        for(int i=0; i< registers.length;i++) {
-            values[i]=(char)registers[i].get();
+        for (int i = 0; i < registers.length; i++) {
+            values[i] = registers[i].get();
         }
         return values;
     }
