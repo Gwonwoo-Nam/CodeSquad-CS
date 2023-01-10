@@ -37,58 +37,80 @@ public class CpuSimulator {
         }
     }
 
+    /**
+     * fetch cycle
+     * to : Memory Address Register ← PC
+     *      PC에 존재하는 주소 값을 MAR에 전송
+     * t1 : Memory Buffer Register ← Memory Address Register 주소 Memory 데이터
+     *      PC ← PC + 명령어의 크기 단위
+ *     t2 : IR ← Memory Buffer Register
+     *      MBR에 일시 저장한 명령어를 실행하기 위해 IR로 전송
+ *      t는 CPU 클록 주기를 의미한다.
+     */
     private void fetch() {
-        bufferRegister.set(memory.get(programCounter.get())); //buffer 레지스터에 명령 저장
+        addressRegister.value = programCounter.get(); // t0
+        bufferRegister.value = memory.get(addressRegister.get()); //t1
         programCounter.increment(); //16비트 증가
+        commandRegister.value = bufferRegister.get(); //t2
     }
 
     private boolean execute() {
         if (commandRegister.get(0, 3) == (short)1) {
-            loadByOffset(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            loadByOffset(commandRegister.get(4, 6), commandRegister.get(7, 9), commandRegister.get(13, 15));
             return true;
         }
         if (commandRegister.get(0, 3) == (short)2) {
-            loadByValue(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(11, 15));
+            loadByValue(commandRegister.get(4, 6), commandRegister.get(7, 9), commandRegister.get(11, 15));
             return true;
         }
         if (commandRegister.get(0, 3) == (short)3) {
-            storeByOffset(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            storeByOffset(commandRegister.get(4, 6), commandRegister.get(7, 9), commandRegister.get(13, 15));
             return true;
         }
         if (commandRegister.get(0, 3) == (short)4) {
-            storeByValue(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(11, 15));
+            storeByValue(commandRegister.get(4, 6), commandRegister.get(7, 9), commandRegister.get(11, 15));
             return true;
         }
         if (commandRegister.get(0, 3) == (short)5) {
-            and(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            and(commandRegister.get(4, 6), commandRegister.get(7, 9), commandRegister.get(13, 15));
             return true;
         }
         if (commandRegister.get(0, 3) == (short)6) {
-            or(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            or(commandRegister.get(4, 6), commandRegister.get(7, 9), commandRegister.get(13, 15));
             return true;
         }
         if (commandRegister.get(0, 3) == (short)7) {
-            addByOffset(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            addByOffset(commandRegister.get(4, 6), commandRegister.get(7, 9), commandRegister.get(13, 15));
             return true;
         }
         if (commandRegister.get(0, 3) == (short)8) {
-            addByValue(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(11, 15));
+            addByValue(commandRegister.get(4, 6), commandRegister.get(7, 9), commandRegister.get(11, 15));
             return true;
         }
         if (commandRegister.get(0, 3) == (short)9) {
-            subByOffset(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(13, 15));
+            subByOffset(commandRegister.get(4, 6), commandRegister.get(7, 9), commandRegister.get(13, 15));
             return true;
         }
         if (commandRegister.get(0, 3) == (short)10) {
-            subByValue(bufferRegister.get(4, 6), bufferRegister.get(7, 9), bufferRegister.get(11, 15));
+            subByValue(commandRegister.get(4, 6), commandRegister.get(7, 9), commandRegister.get(11, 15));
             return true;
         }
         if (commandRegister.get(0, 3) == (short)11) {
-            mov(bufferRegister.get(4, 6), bufferRegister.get(7, 15));
+            mov(commandRegister.get(4, 6), commandRegister.get(7, 15));
             return true;
         }
         return false;
     }
+
+    /**
+     * execution Cycle
+     * LOAD
+     * t0 : Memory Address Register ← IR
+     * t1 : Memory Buffer Register ← Memory(Memory Address Register)
+     * t2 : Accumulator(여기에서는 destination Register) ← Memory Buffer Register
+     *
+     * Memory Address Register를 여기서에서는 Base Register와 Offset Register로 나누어서 배열에 접근함.
+     */
 
     private void loadByOffset(short destReg, short baseReg, short offsetReg) {
         addressRegister.value = (short)(registers[baseReg - 1].value +
@@ -114,6 +136,15 @@ public class CpuSimulator {
         bufferRegister.value = registers[srcReg - 1].value; // 주소 레지스터에 저장할 데이터의 주소를 저장
         memory.set(addressRegister.value, bufferRegister.value); //주소 레지스터에 해당하는 메모리 값을 불러와 버퍼 레지스터에 저장
     }
+
+    /**
+     * t0 : Memory Address Register ← IR
+     * t1 : Memory Buffer Register ← M(Memory Address Register)
+     * t2 : AC ← AC Operand MBR
+     *
+     * Basic 컴퓨터는 CPU에서 계산이 이루어지는 원리는 누산기 레지스터 저장 되어있는 값과 메모리 버퍼 레지스터의 값을 로드하여 ALU에서 연산한다.
+     * 이 문제에서 누산기를 Register 중 하나로 묶어놓았음
+     */
 
     private void and(short destReg, short opReg1, short opReg2) {
         registers[destReg - 1].value = (short)alu.and(registers[opReg1-1].value, registers[opReg2-1].value);
