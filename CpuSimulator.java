@@ -30,7 +30,6 @@ public class CpuSimulator {
     public void runPipeLine() {
         while (true) {
             fetch(); //명령을 가져와서 memory buffer 레지스터에 등록
-            commandRegister.value = bufferRegister.value; //buffer 레지스터의 명령을 해석해서 instruction을 명령어 레지스터에 저장
             if (!execute()) {
                 break;
             }

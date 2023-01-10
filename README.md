@@ -42,6 +42,18 @@
   - t2 : IR ← Memory Buffer Register
     - MBR에 일시 저장한 명령어를 실행하기 위해 IR로 전송 
   - (t는 CPU 클록 주기를 의미한다.)
+- execution Cycle
+  - ex) LOAD
+  - t0 : Memory Address Register ← IR
+  - t1 : Memory Buffer Register ← Memory(Memory Address Register)
+  - t2 : Accumulator(여기에서는 destination Register) ← Memory Buffer Register
+  - Memory Address Register를 여기서에서는 Base Register와 Offset Register로 나누어서 배열에 접근함.
+- 산술, 논리 연산 cycle
+  - t0 : Memory Address Register ← IR
+  - t1 : Memory Buffer Register ← M(Memory Address Register)
+  - t2 : AC ← AC Operand MBR 
+  - Basic 컴퓨터는 CPU에서 계산이 이루어지는 원리는 누산기 레지스터 저장 되어있는 값과 메모리 버퍼 레지스터의 값을 로드하여 ALU에서 연산한다.
+  - 이 문제에서 누산기를 Register 중 하나로 묶어놓았음
 
 - 명령어 실행에 필요한 레지스터
   - Program Counter(PC)
@@ -51,7 +63,45 @@
   - 누산기 (Accumulator)
     - 데이터를 일시적으로 저장하는 레지스터로 연산 결과 저장
     - 레지스터 크기는 CPU가 한번에 처리 가능
+  - MAR(Memory Address Register) : CPU가 읽거나 쓰려는 메모리 주소를 일시적으로 저장, 일부 데이터 저장하거나 데이터를 읽을 때 필요한 메모리 위치 주소를 저장한다.
+  - MBR(Memory Buffer Register) : 메모리에 읽거나 쓰려는 데이터 또는 명령을 일시 저장한다. 명령은 IR로 전송되며, 데이터는 AC 또는 I/O 레지스터로 전송된다. 즉, 이 레지스터는 메모리를 읽거나 메모리에 쓰려는 데이터 또는 명령을 임시 저장하는데 사용된다.
+  - IR(Instruction Register) : 메모리에서 명령을 가져오면 명령어 레지스터에 저장된다. 제어장치는 이 레지스터의 지시를 받아 컴퓨터 요소로 신호를 전송, 명령을 해석하며 실행한다.
 
+
+### Instruction Code
+
+- CPU를 제어하기 위한 코드
+- Memory Reference Instruction
+  - Operation Code(Opcode) + address part
+  - 연산 방법을 선택하는 코드와 피연산자의 주소 부분으로 나뉜다.
+  - Address part의 들어오는 값은 addressing mode에 따라 나뉜다.
+    - Address part에 들어있는 비트를 어떻게 해석할지에 대한 모드, 16비트는 2가지만 가진다.
+    - 0 : direct addressing : operand = M[address]
+      - 즉, 피연산자가 들어있는 메모리 주소를 나타낸다.
+    - 1 : indirect addressing : operand = M[M[addresss]]
+      - 피연산자가 들어있는 주소를 가리키는 메모리 주소
+  - OpCode는 연산 방법을 지정한다.
+  - Address part 자리에는 피연산자가 존재하는 주소 정보
+
+- register-reference instruction
+  - operand를 필요로 하지 않는 instruction
+  - 하위 비트로는 연산의 종류를 결정한다.
+  - clear accumulator 등
+- input-output instruction
+  - operand를 필요로 하지 않는 instruction
+  - 하위 비트로는 연산의 종류를 결정한다.
+  - interrupt on, input char to AC 등
+
+### 좋은 instruction set이란?
+다음 조건을 만족하면 complete한 명령어집합이라고 한다.
+- 산술, 논리, 쉬프트 명령 정의
+- 메모리, 프로세스 레지스터로 정보를 load, store 명령이 정의
+- 컨트롤 명령의 정의(조건에 따른 분기 - branch, increment and skip if zero 등)
+- input, output 등 I/O 명령 정의
+
+### dump
+- 어떤 장애가 발생했을 때, 디버그를 위해 기억장치에 기억시킨 내용을 보조기억 장치 등 매체에 복사, 전이
+- 혹은 주기억장치, 레지스터에 존재하는 내용 자체
 
 ### 기능 요구사항
 객체 구현
