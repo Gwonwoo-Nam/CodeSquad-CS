@@ -76,7 +76,7 @@ Young 영역의 객체를 참조할 경우를 대비한 512 bytes의 카드 테�
 - 오래살아남은 객체는 Old 영역으로 이동(Promotion)된다.
     - 객체의 생존 횟수를 의미하는 age를 Object header에 기록하여, age에 따라 promotion을 결정한다.
 
-![img.png](./img.png)
+![img.png](https://gist.github.com/Gwonwoo-Nam/3366e593b9180b4f0f8e86bdb32b82f1/raw/4057021f2dd4b1efe87136c456c7713ad227f63a/img.png)
 
 [Major GC의 동작]
 
@@ -92,7 +92,7 @@ Young 영역의 객체를 참조할 경우를 대비한 512 bytes의 카드 테�
     - 빠른 새로운 메모리 할당을 위해 기존 메모리의 오브젝트를 힙의 시작위치로 옮겨놓는 방법
     - 창고 물건을 버리고 물건을 다시 차곡차곡 쌓아두는 것과 유사
 
-![img_1.png](./img_1.png)
+![img_1.png](https://gist.github.com/Gwonwoo-Nam/3366e593b9180b4f0f8e86bdb32b82f1/raw/4057021f2dd4b1efe87136c456c7713ad227f63a/img_1.png)
 
 2. Parallel GC
     - Young Generation에 대한 GC를 멀티스레드를 사용해 수행
