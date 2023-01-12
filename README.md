@@ -5,14 +5,14 @@
 <details>
 <summary>Heap과 Stack</summary>
 
-[Stack]
+### [Stack]
 
 - Heap 영역에 생성된 Object 타입의 데이터 참조 값(주소)가 할당
 - 원시 타입의 데이터가 값과 함께 할당
 - 지역 변수는 scope에 따른 visibility
 - Thread는 자신만의 stack을 가진다.
 
-[heap]
+### [heap]
 
 - 주로 긴 생명주기를 가지는 오브젝트들 저장
 - 스레드와 상관없이 단 하나의 heap 영역 존재
@@ -33,7 +33,7 @@
 - 스택에서 더 이상 힙의 객체를 참조하지 않는 경우(Unreachable) 가비지가 된다.
     - Unreachable : 스택에서 도달할 수 없는 heap의 객체
 
-[Minor GC와  Major GC]
+### [Minor GC와  Major GC]
 
 JVM의 객체는 대부분 일회성으로 생겼다가 해제되므로 장기/단기에 따라 Young, Old로 구분하여 Heap 영역이 설계되었다.
 그리고, 오래된 객체는 새로운 객체를 참조할 일이 거의 없다.
@@ -51,20 +51,20 @@ Old 영역은 즉 수명이 긴 객체들, Young은 주기가 짧고 많은 공�
 Young 영역의 객체를 참조할 경우를 대비한 512 bytes의 카드 테이블이 존재. Minor GC를 수행할 때, Old 영역이 참조하고 있는지를 모두 확인해야하는데,
 비효율적이므로 카드 테이블만 조회해 GC 대상인지 아닌지를 식별함.
 
-[Garbage Collection의 동작 방식]
+### [Garbage Collection의 동작 방식]
 
 세부 사항은 다르지만 크게 2가지 공통 단계가 있다.
 
-1. Stop the World
+1. **Stop the World**
 
 - GC를 실행하기 위해 JVM이 실행을 멈추는 단계. 모든 쓰레드의 작업 중단, GC 완료 후 재개된다.
 - GC 성능 개선 = 멈춤 시간 감소
 
-2. Mark and Sweep
+2. **Mark and Sweep**
     - Mark : 사용/비사용 메모리 구분
     - Sweep : 비사용 메모리 해제
 
-[Minor GC의 동작]
+### [Minor GC의 동작]
 
 - Young 영역의 구조
     - Eden 영역 : 객체가 Allocation되는 영역
@@ -78,12 +78,12 @@ Young 영역의 객체를 참조할 경우를 대비한 512 bytes의 카드 테�
 
 ![img.png](https://gist.github.com/Gwonwoo-Nam/3366e593b9180b4f0f8e86bdb32b82f1/raw/4057021f2dd4b1efe87136c456c7713ad227f63a/img.png)
 
-[Major GC의 동작]
+### [Major GC의 동작]
 
 - 객체들의 promotion으로 old memory가 부족해질 때 발생
 - 메모리 용량이 크기 때문에 10배이상 시간 소요, minor 영역도 참조를 확인해야하므로 시간이 많이 걸린다.
 
-[Garbage Collector 종류]
+### [Garbage Collector 종류]
 
 1. Serial GC
 
@@ -96,6 +96,7 @@ Young 영역의 객체를 참조할 경우를 대비한 512 bytes의 카드 테�
 
 2. Parallel GC
     - Young Generation에 대한 GC를 멀티스레드를 사용해 수행
+
 3. Concurrent Mark Sweep(CMS) Collector
     - Low Pause Time이 목적
     - Major GC에 대해서도 Multi Threading한다는 것이 Parallel과 차이점
@@ -104,6 +105,35 @@ Young 영역의 객체를 참조할 경우를 대비한 512 bytes의 카드 테�
     - 빠른 처리 속도, STW 최소화, CMS GC보다 효율적으로 App과 GC 진행 가능, 메모리 Compaction 지원
     - 자바 9 이후 기본 GC 방식
 
+</details>
+
+<details>
+<summary>JVM Memory Structure</summary>
+
+![JVMMemoryStructure](https://res.cloudinary.com/practicaldev/image/fetch/s--1DBZ83TM--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://i.imgur.com/8uh8SPy.png)
+
+- Heap
+  - Young Gen.
+    - Eden space
+    - Survivor Space : S0 / S1
+  - Old Gen.("Tenured Space")
+
+- Thread Stacks
+  - 프로세스마다 스레드 당 하나의 stack memory가 저장되는 공간을 가지고 있다.
+  - thread 고유의 메서드/함수 호출과 객체에 대한 참조 변수를 저장(일반적인 OS 운영체제 스택 구조와 동일)
+
+- Native Memory
+  - Meta Space
+    - 최대 한도가 없는 메모리, PermGen Space라고도 불린다.
+    - 클래스 로더가 클래스 정의를 저장하기 위한 공간이며, 이 공간이 계속해서 커지면 OS가 가상 메모리로 전환하기 때문에 속도가 느려짐.
+  - Code Cache
+    - Just In Time(JIT) 컴파일러가 컴파일한 코드블럭을 저장하는 공간.
+    - JVM의 바이트 코드(JVM이 이해하는 코드 - class 확장자)를 JIT compiled 코드로 인터프릿한 코드(컴퓨터가 이해하는 코드)를 바로 실행하도록 여기에 캐시한다.
+  - Shared Libraries
+    - shared library를 위한 native code가 저장되는 공간.
+    - 프로세스 당 한번 OS에 의해 load된다.
+
+![JVMExecutionProcess](http://www.tcpschool.com/lectures/img_java_programming.png)
 </details>
 
 ### 기능 요구사항
