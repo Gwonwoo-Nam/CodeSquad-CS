@@ -1,10 +1,14 @@
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
 public class Heap {
 
-    private byte[] heap; //4Byte Pointer + 1,2,4,8,16,32Byte Type
-    public int pointer = 0;
+    public LinkedList<Variable> heapMemory = new LinkedList<>(); //4Byte Pointer + 1,2,4,8,16,32Byte Type
+    public int maxSize;
 
     public Heap(int size) {
-        heap = new byte[size];
+        maxSize = size;
     }
 
     public int add(String type, int count) {
@@ -12,19 +16,37 @@ public class Heap {
         if (typeSize == 0) {
             UserTypes.add(type, 4);
         }
-        int objSize = typeSize*count;
+
+        int objSize = 0;
+        int pointer = 0;
         while (count-- > 0) {
-            if (typeSize != 8) {
-                for (int offset = typeSize; offset < 8; offset++) {
-                    heap[pointer + offset] = 2; //패딩 넣어주기
-                }
+            if (typeSize < 8) {
+                objSize += 8;
+                continue;
             }
-            for (int offset = 0; offset < typeSize; offset++) {
-                heap[pointer + offset] = 1; //type 값 넣어주기
-            }
+            objSize += typeSize;
             pointer += 8;
         }
+        heapMemory.add(new Variable(type, objSize, pointer));
         return objSize;
+    }
+
+    public void remove(int pointingAddr) {
+        int heapAddr = 0;
+        int index = 0;
+        while (heapAddr != pointingAddr) {
+            heapAddr += heapMemory.get(index).size;
+            index++;
+        }
+        heapMemory.remove(index);
+    }
+
+    public int getAddress() {
+        int addr = 0;
+        for (Variable variable : heapMemory) {
+            addr += variable.addr;
+        }
+        return addr;
     }
 
 

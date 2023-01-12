@@ -6,7 +6,6 @@ public class Program {
         Memory memory = new Memory();
 
         int base = memory.init(1024, 1024);
-        //base.printAddress();
         memory.setSize("short", 4);
         memory.setSize("int", 8);
         memory.setSize("string", 16);
@@ -14,15 +13,18 @@ public class Program {
         int shortPointer = memory.malloc("short", 5);
         memory.heapDump();
         memory.call("foo", 2);
-        memory.call("bar", 2);
-        memory.call("dap", 2);
         int string1 = memory.malloc("crong", 1);
-        memory.returnFrom("dap");
         memory.callstack();
+        memory.call("bar", 1);
+        int string2 = memory.malloc("jk", 2);
+        memory.returnFrom("bar");
+        memory.free(string1);
         memory.heapDump();
+        memory.free(string2);
+        memory.callstack();
 
-        //arrayPointer.printAddress();
-        //shortPointer.printAddress();
+
+        memory.heapDump();
     }
 
 }

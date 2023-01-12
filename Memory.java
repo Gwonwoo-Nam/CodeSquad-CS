@@ -33,30 +33,34 @@ public class Memory {
 
     public int malloc(String type, int count) {
 
-        int heapPointer = heap.pointer;
+        int heapPointer = heap.getAddress();
         int objSize = heap.add(type, count);
 
         // Stack에 포인터 생성하기
-        Stack.call(new Pointer(new Variable(type, objSize), heapPointer));
+        Stack.call(new Pointer(new Variable(type, objSize, heapPointer), heapPointer));
         return Stack.stackPointer;
     }
 
-    public int free(Pointer pointer) {
+    public int free(int pointer) {
+        int pointingAddr = Stack.searchHeap(pointer);
+        //int size = Stack.callstacks.get(pointer / 8).size;
 
+        heap.remove(pointingAddr);
+
+        return pointingAddr;
     }
 
     public void heapDump() {
         int stackAddr = 0;
-        LinkedList<Pointer> stacks = Stack.getCallstacks();
-        for (Pointer pointer : Stack.getCallstacks()) {
-            if (pointer.call == false) {
-                System.out.println("Type Name : " + pointer.variable.typeName);
-                System.out.println("Object Size(Byte) : " + pointer.variable.size);
-                System.out.println("Heap Address : " + View.printAddress(pointer.pointingAddr));
-                System.out.println("Stack Pointer Address : " + View.printAddress(stackAddr));
-                System.out.println("------------------------");
+        int heapAddr = 0;
 
-            }
+        for (Variable variable : heap.heapMemory) {
+            System.out.println("Type Name : " + variable.typeName);
+            System.out.println("Object Size(Byte) : " + variable.size);
+            System.out.println("Heap Address : " + View.printAddress(variable.pointingAddr));
+            System.out.println("Stack Pointer Address : " + View.printAddress(stackAddr));
+            System.out.println("------------------------");
+
             stackAddr += 32;
         }
     }
@@ -82,19 +86,19 @@ public class Memory {
 
     public void returnFrom(String name) {
         if (callBool == false) {
-            return ;
+            return;
         }
         LinkedList<Pointer> stacks = Stack.getCallstacks();
-        for (int i = stacks.size() - 1; i>=0; i--) {
+        for (int i = stacks.size() - 1; i >= 0; i--) {
             if (stacks.get(i).call == false) {
                 Stack.stackPointer -= 32;
                 Stack.callstacks.removeLast();
-                continue ;
+                continue;
             }
             if (stacks.get(i).callStackName.equals(name)) {
                 Stack.stackPointer -= 32;
                 Stack.callstacks.removeLast();
-                break ;
+                break;
             }
             throw new IllegalArgumentException("가장 최근의 호출 call이 아닙니다.");
         }
