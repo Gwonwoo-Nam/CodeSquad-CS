@@ -2,27 +2,33 @@ import java.util.LinkedList;
 
 
 public class Stack {
+    public int stackPointer = 0;
+    public LinkedList<Pointer> callstacks = new LinkedList<>();
 
-    private static byte[] stackMemory; //4Byte Pointer + 1,2,4,8,16,32Byte Type
-    public static int stackPointer = 0;
-    public static LinkedList<Pointer> callstacks = new LinkedList<>();
-
+    public int maxSize;
 
     public Stack(int size) {
-        stackMemory = new byte[size];
+        maxSize = size;
     }
 
-
-    public static void call(Pointer pointer) {
+    public void call(Pointer pointer) {
         callstacks.add(pointer);
         stackPointer += pointer.size;
     }
 
-    public static int searchHeap(int address) {
-        return callstacks.get(address / 8).pointingAddr;
+    public int searchHeap(int address) {
+        return callstacks.get(address / 4 - 1).variable.addr;
     }
 
-    public static LinkedList<Pointer> getCallstacks() {
+    public int getSpace() {
+        int space = 0;
+        for (Pointer pointer : callstacks) {
+            space += pointer.size;
+        }
+        return space;
+    }
+
+    public LinkedList<Pointer> getCallstacks() {
         return callstacks;
     }
 

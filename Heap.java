@@ -1,6 +1,4 @@
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.Map;
 
 public class Heap {
 
@@ -18,16 +16,14 @@ public class Heap {
         }
 
         int objSize = 0;
-        int pointer = 0;
         while (count-- > 0) {
             if (typeSize < 8) {
                 objSize += 8;
                 continue;
             }
             objSize += typeSize;
-            pointer += 8;
         }
-        heapMemory.add(new Variable(type, objSize, pointer));
+        heapMemory.add(new Variable(type, objSize, getAddressAtIndex(heapMemory.size())));
         return objSize;
     }
 
@@ -41,12 +37,28 @@ public class Heap {
         heapMemory.remove(index);
     }
 
-    public int getAddress() {
+    public int getAddressAtIndex(int index) {
         int addr = 0;
-        for (Variable variable : heapMemory) {
-            addr += variable.addr;
+        for (int i=0; i< index;i++) {
+            addr += heapMemory.get(i).size;
         }
         return addr;
+    }
+
+    public void free(int address) {
+        for (Variable variable : heapMemory) {
+            if (variable.addr == address) {
+                heapMemory.remove(variable);
+            }
+        }
+    }
+
+    public int getSpace() {
+        int space = 0;
+        for (Variable variable : heapMemory) {
+            space += variable.size;
+        }
+        return space;
     }
 
 

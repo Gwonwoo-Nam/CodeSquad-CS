@@ -10,4 +10,6 @@ public class Variable {
     public String typeName;
     public int size;
     public int addr;
+
+    public boolean mark = false;
 }

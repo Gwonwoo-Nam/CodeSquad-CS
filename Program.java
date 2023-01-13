@@ -2,7 +2,6 @@ public class Program {
 
     public static void main(String[] args) {
 
-
         Memory memory = new Memory();
 
         int base = memory.init(1024, 1024);
@@ -16,15 +15,27 @@ public class Program {
         int string1 = memory.malloc("crong", 1);
         memory.callstack();
         memory.call("bar", 1);
+
         int string2 = memory.malloc("jk", 2);
+
+        System.out.println(memory.usage());
         memory.returnFrom("bar");
-        memory.free(string1);
-        memory.heapDump();
-        memory.free(string2);
+        try {
+            memory.free(string1);
+            memory.heapDump();
+            memory.free(string2);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
         memory.callstack();
 
+        memory.garbageCollect();
 
+        System.out.println(memory.usage());
         memory.heapDump();
+
+        memory.reset();
+        System.out.println(memory.usage());
     }
 
 }

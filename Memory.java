@@ -1,4 +1,7 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Memory {
 
@@ -13,7 +16,7 @@ public class Memory {
     public int init(int stackSize, int heapSize) {
         stack = new Stack(stackSize);
         heap = new Heap(heapSize);
-        return Stack.stackPointer;
+        return stack.stackPointer;
     }
 
     /**
@@ -33,48 +36,51 @@ public class Memory {
 
     public int malloc(String type, int count) {
 
-        int heapPointer = heap.getAddress();
+        int heapAddress = heap.getAddressAtIndex(heap.heapMemory.size());
         int objSize = heap.add(type, count);
 
         // Stack에 포인터 생성하기
-        Stack.call(new Pointer(new Variable(type, objSize, heapPointer), heapPointer));
-        return Stack.stackPointer;
+        stack.call(new Pointer(new Variable(type, objSize, heapAddress)));
+        return stack.stackPointer;
     }
 
     public int free(int pointer) {
-        int pointingAddr = Stack.searchHeap(pointer);
-        //int size = Stack.callstacks.get(pointer / 8).size;
+        if (pointer > stack.stackPointer) {
+            throw new IllegalArgumentException("unthrowable");
+        }
+        int heapAddress = stack.searchHeap(pointer);
+        heap.free(heapAddress);
 
-        heap.remove(pointingAddr);
-
-        return pointingAddr;
+        return heapAddress;
     }
 
     public void heapDump() {
         int stackAddr = 0;
-        int heapAddr = 0;
 
+        System.out.println("Heap 영역 Dump");
         for (Variable variable : heap.heapMemory) {
             System.out.println("Type Name : " + variable.typeName);
             System.out.println("Object Size(Byte) : " + variable.size);
-            System.out.println("Heap Address : " + View.printAddress(variable.pointingAddr));
+            System.out.println("Heap Address : " + View.printAddress(variable.addr));
             System.out.println("Stack Pointer Address : " + View.printAddress(stackAddr));
             System.out.println("------------------------");
 
             stackAddr += 32;
         }
+        System.out.println("\n\n");
     }
 
     public void call(String name, int paramCount) {
         callBool = true;
         for (int i = 0; i < paramCount; i++) {
-            Stack.call(new Pointer(name));
+            stack.call(new Pointer(name));
         }
     }
 
     public void callstack() {
         int stackAddr = 0;
-        LinkedList<Pointer> stacks = Stack.getCallstacks();
+        LinkedList<Pointer> stacks = stack.getCallstacks();
+        System.out.println("Stack 영역 Dump");
         for (Pointer pointer : stacks) {
             if (pointer.call == true) {
                 System.out.print(pointer.callStackName + "() " + View.printAddress(stackAddr));
@@ -82,26 +88,53 @@ public class Memory {
             }
             stackAddr += 32;
         }
+        System.out.println("\n\n");
     }
 
     public void returnFrom(String name) {
         if (callBool == false) {
             return;
         }
-        LinkedList<Pointer> stacks = Stack.getCallstacks();
-        for (int i = stacks.size() - 1; i >= 0; i--) {
-            if (stacks.get(i).call == false) {
-                Stack.stackPointer -= 32;
-                Stack.callstacks.removeLast();
+
+        for (int i = stack.callstacks.size() - 1; i >= 0; i--) {
+            if (stack.callstacks.get(i).call == false) {
+                stack.stackPointer -= 4;
+                stack.callstacks.removeLast();
                 continue;
             }
-            if (stacks.get(i).callStackName.equals(name)) {
-                Stack.stackPointer -= 32;
-                Stack.callstacks.removeLast();
+            if (stack.callstacks.get(i).callStackName.equals(name)) {
+                stack.stackPointer -= 4;
+                stack.callstacks.removeLast();
                 break;
             }
             throw new IllegalArgumentException("가장 최근의 호출 call이 아닙니다.");
         }
+    }
+
+    public List<String> usage() {
+        List<Integer> usage = new ArrayList<>(List.of(stack.maxSize,stack.getSpace(),stack.maxSize-stack.getSpace(),heap.maxSize,heap.getSpace(),heap.maxSize-heap.getSpace()));
+        return usage.stream().map(value -> Integer.toString(value)).collect(Collectors.toList());
+    }
+
+    public void garbageCollect() {
+        for (Pointer pointer : stack.callstacks) {
+            for (Variable variable : heap.heapMemory) {
+                if (pointer.call == false && pointer.variable.addr == variable.addr) { //stack의 포인터가 가리키는 주소와 힙의 주소가 같을 때
+                    variable.mark = true;
+                }
+            }
+        }
+        for (Variable variable : heap.heapMemory) {
+            if (variable.mark == false) { //stack의 포인터가 가리키는 주소와 힙의 주소가 같을 때
+                heap.heapMemory.remove(variable);
+            }
+        }
+    }
+
+    public void reset() {
+        heap.heapMemory.clear();
+        stack.callstacks.clear();
+
     }
 
 
