@@ -1,13 +1,16 @@
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Controller {
 
-    private Polygon polygon = new Polygon();
+    private Line polygon;
 
     public void run() throws IOException {
+
         InputView inputView = new InputView();
 
-        int inputSize = registerInputs(inputView);
+        registerInputs(inputView);
 
         OutputView outputView = new OutputView();
         try {
@@ -17,39 +20,65 @@ public class Controller {
         }
         outputView.render();
 
-        if (inputSize == 4) {
-            runLine();
-        }
-        if (inputSize == 6) {
-            runTriangle();
-        }
+        printResult();
 
     }
 
-    private int registerInputs(InputView inputView) throws IOException {
+    private void registerInputs(InputView inputView) throws IOException {
         int[] numbers = inputView.readLine();
-        int x = 0;
-        int y = 0;
-        Line line = new Line();
-        for (int index = 0; index < numbers.length; index++) {
-
-            if (index % 2 == 0) {
-                x = numbers[index];
-            }
-            if (index % 2 == 1) {
-                y = numbers[index];
-                line.add(new Dot(x, y));
-            }
+        List<Dot> dots = new ArrayList<>();
+        if (numbers.length == 4) {
+            polygon = new Line(dots, numbers);
+            return ;
         }
-        polygon.add(line);
-        return numbers.length;
+        if (numbers.length == 6) {
+            polygon = new Triangle(dots, numbers);
+            return ;
+        }
+        if (numbers.length == 8) {
+            polygon = new Rectangle(dots, numbers);
+            return ;
+        }
+        if (numbers.length >= 10 && numbers.length % 2 == 0) {
+            polygon = new Polygon(dots, numbers);
+            return ;
+        }
+        throw new IllegalArgumentException("인자의 개수가 홀수입니다.");
     }
 
-    private void runLine() {
-        System.out.println("두 점 사이의 거리는 " + polygon.calculateDistance(0, 1));
+    private void printResult() {
+        if (polygon instanceof Polygon) {
+            runPolygon((Polygon)polygon);
+            return;
+        }
+        if (polygon instanceof Rectangle) {
+            runRectangle((Rectangle) polygon);
+            return;
+        }
+        if (polygon instanceof Triangle) {
+            runTriangle((Triangle) polygon);
+            return;
+        }
+        if (polygon instanceof Line) {
+            runLine(polygon);
+        }
+
+
     }
 
-    private void runTriangle() {
-        System.out.println("삼각형의 넓이는 " + polygon.calculateArea(0,1,2));
+    private void runLine(Line line) {
+        System.out.println("두 점 사이의 거리는 " + line.calculateDistance(0, 1));
+    }
+
+    private void runTriangle(Triangle triangle) {
+        System.out.println("삼각형의 넓이는 " + triangle.calculate());
+    }
+
+    private void runRectangle(Rectangle rectangle) {
+        System.out.println("사각형의 넓이는 " + rectangle.calculate());
+    }
+
+    private void runPolygon(Polygon polygon) {
+        System.out.println("다각형의 넓이는" + polygon.calculate());
     }
 }

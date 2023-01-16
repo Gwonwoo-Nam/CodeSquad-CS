@@ -1,9 +1,9 @@
-public class Dot implements Drawable {
+public class Dot {
 
     private final int x;
     private final int y;
 
-    @Override
+
     public void init() {
         validateNumberRange(x, y);
 
@@ -20,6 +20,8 @@ public class Dot implements Drawable {
             throw new IllegalArgumentException("유효하지 않은 범위의 좌표 입력입니다.");
         }
     }
+
+
 
     public int getX() {
         return x;

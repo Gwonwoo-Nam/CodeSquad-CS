@@ -1,10 +1,8 @@
-import java.util.Arrays;
-
 public class OutputView {
 
     private int[][] map = new int[25][25];
 
-    public void drawMap(Polygon polygon) throws IndexOutOfBoundsException {
+    public void drawMap(Line polygon) throws IndexOutOfBoundsException {
 
         for (int x = 0; x <= 24; x++) {
             for (int y = 0; y <= 24; y++) {
@@ -13,9 +11,9 @@ public class OutputView {
         }
     }
 
-    private void mark(Polygon polygon, int x, int y) {
-        for (int pointIndex = 0; pointIndex < polygon.getDots(0).size(); pointIndex++) {
-            if ((polygon.getX(0, pointIndex) == x && polygon.getY(0, pointIndex) == y)) {
+    private void mark(Line polygon, int x, int y) {
+        for (int pointIndex = 0; pointIndex < polygon.getDots().size(); pointIndex++) {
+            if ((polygon.getX(pointIndex) == x && polygon.getY(pointIndex) == y)) {
                 map[x][y] = 1;
             }
         }

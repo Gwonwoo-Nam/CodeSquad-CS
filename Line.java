@@ -1,22 +1,33 @@
-import java.util.ArrayList;
 import java.util.List;
 
-public class Line implements Drawable{
+public class Line implements Drawable {
 
-    private List<Dot> dots = new ArrayList<>();
+    protected List<Dot> dots;
 
-
-    public void add(Dot dot) {
-        dots.add(dot);
+    Line(List<Dot> dots, int[] numbers) {
+        this.dots = dots;
+        init(numbers);
     }
-
 
     @Override
-    public void init() {
-
+    public void init(int[] numbers) {
+        int x = 0;
+        int y = 0;
+        for (int index = 0; index < numbers.length; index++) {
+            if (index % 2 == 0) {
+                x = numbers[index];
+            }
+            if (index % 2 == 1) {
+                y = numbers[index];
+                dots.add(new Dot(x, y));
+            }
+        }
     }
 
-
+    @Override
+    public double calculate() {
+        return calculateDistance(0,1);
+    }
     public double calculateDistance(int p1, int p2) {
         return Math.sqrt((dots.get(p1).getX() - dots.get(p2).getX())*(dots.get(p1).getX() - dots.get(p2).getX()) +
             (dots.get(p1).getY() - dots.get(p2).getY())*(dots.get(p1).getY() - dots.get(p2).getY()));
@@ -25,5 +36,13 @@ public class Line implements Drawable{
 
     public List<Dot> getDots() {
         return dots;
+    }
+
+    public int getX (int pointIndex) {
+        return dots.get(pointIndex).getX();
+    }
+
+    public int getY (int pointIndex) {
+        return dots.get(pointIndex).getY();
     }
 }
