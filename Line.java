@@ -45,4 +45,9 @@ public class Line implements Drawable {
     public int getY (int pointIndex) {
         return dots.get(pointIndex).getY();
     }
+
+    @Override
+    public String toString() {
+        return ("두 점 사이의 거리는 " + calculate());
+    }
 }

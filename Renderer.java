@@ -23,7 +23,7 @@ public class Renderer {
 
     private void renderXAxis(StringBuffer renderer, int x, int y) {
         if (y == 0 && map[x][0] == 1) {
-            renderer.append("-*-");
+            renderer.append("-•-");
             return ;
         }
         if (y == 0) {
@@ -33,7 +33,7 @@ public class Renderer {
 
     private void renderYBar(StringBuffer renderer, int y) {
         if (map[0][0] == 1 && y == 0) { //x축
-            renderer.append("  *");
+            renderer.append("  •");
             return ;
         }
         if (y == 0) { //x축
@@ -56,15 +56,15 @@ public class Renderer {
 
     private void addBarMark(StringBuffer renderer, int loc) {
         if (map[0][loc] == 1) {
-            renderer.append("*");
+            renderer.append("•");
             return ;
         }
-        renderer.append("|");
+        renderer.append("┊");
     }
 
     private void renderPoints(StringBuffer renderer, int x, int y) {
         if (map[x][y] == 1 && x != 0 && y != 0) {
-            renderer.append(" * ");
+            renderer.append(" • ");
         }
 
         if (x!=0 && y != 0 && map[x][y] != 1) {

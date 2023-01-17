@@ -38,4 +38,9 @@ public class Polygon extends Triangle implements Drawable {
 
         }
     }
+
+    @Override
+    public String toString() {
+        return ("다각형의 넓이는 " + calculate());
+    }
 }

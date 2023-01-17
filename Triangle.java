@@ -25,5 +25,9 @@ public class Triangle extends Line implements Drawable {
             4 * Math.pow(a, 2) * Math.pow(b, 2) - Math.pow((a * a + b * b - c * c), 2));
     }
 
+    @Override
+    public String toString() {
+        return ("삼각형의 넓이는 " + calculate());
+    }
 
 }

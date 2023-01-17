@@ -44,4 +44,9 @@ public class Rectangle extends Triangle implements Drawable {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return ("사각형의 넓이는 " + calculate());
+    }
 }
