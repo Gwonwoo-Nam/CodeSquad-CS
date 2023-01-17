@@ -38,6 +38,4 @@ public class Polygon extends Triangle implements Drawable {
 
         }
     }
-
-
 }

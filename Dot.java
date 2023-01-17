@@ -6,7 +6,6 @@ public class Dot {
 
     public void init() {
         validateNumberRange(x, y);
-
     }
 
     Dot(int x, int y) {
@@ -20,7 +19,6 @@ public class Dot {
             throw new IllegalArgumentException("유효하지 않은 범위의 좌표 입력입니다.");
         }
     }
-
 
 
     public int getX() {
