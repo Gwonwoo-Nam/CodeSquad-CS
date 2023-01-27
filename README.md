@@ -117,18 +117,47 @@
     - OR
 - Memory Class : 자료구조를 포함한 저장 클래스, Key(address)와 Value로 대응되는 자료구조
 
-기능 구현
-- [ ] LOAD : (base + offset) 주소 메모리 값을 읽어서 dst.Reg에 저장한다.
-- [ ] STORE : src.Reg 값을 (base + offset) 주소 메모리에 저장한다. 
-- [ ] AND : 논리 AND 연산해서 dst.Reg에 저장한다.
-- [ ] OR : 논리 OR 연산해서 dst.Reg에 저장한다.
-- [ ] ADD : 덧셈 (+) 연산해서 dst.Reg에 저장한다. (AND와 OR을 이용해 구현)
-- [ ] SUB : 뺄셈 (-) 연산해서 dst.Reg에 저장한다.
-- [ ] MOV : op.Value 값을 dst.Reg에 저장한다.
+### 기능 구현
+- [O] LOAD : (base + offset) 주소 메모리 값을 읽어서 dst.Reg에 저장한다.
+- [O] STORE : src.Reg 값을 (base + offset) 주소 메모리에 저장한다. 
+- [O] AND : 논리 AND 연산해서 dst.Reg에 저장한다.
+- [O] OR : 논리 OR 연산해서 dst.Reg에 저장한다.
+- [O] ADD : 덧셈 (+) 연산해서 dst.Reg에 저장한다. (AND와 OR을 이용해 구현)
+- [O] SUB : 뺄셈 (-) 연산해서 dst.Reg에 저장한다.
+- [O] MOV : op.Value 값을 dst.Reg에 저장한다.
 
-Cpu Class 메서드 구현
-- [ ] reset() : 레지스터 값을 모두 지우고 PC 값도 0으로 초기화한다.
-- [ ] fetch() : 현재 PC 값에 해당하는 메모리에서 프로그램 명령어를 가져와서 리턴한다. PC 카운트를 +1 증가시킨다.
+### Cpu Class 메서드 구현
+- [O] reset() : 레지스터 값을 모두 지우고 PC 값도 0으로 초기화한다.
+- [O] fetch() : 현재 PC 값에 해당하는 메모리에서 프로그램 명령어를 가져와서 리턴한다. PC 카운트를 +1 증가시킨다.
   - fetch에서 리턴한 명령을 execute로 넘겨준다.
-- execute(Int16 IR) : 전달한 명령어를 어떤 명령인지 분석해서 계산하거나 처리
-- dump() : REGISTER들 값을 배열에 넣어서 리턴한다.
+- [O] execute(Int16 IR) : 전달한 명령어를 어떤 명령인지 분석해서 계산하거나 처리
+- [O] dump() : REGISTER들 값을 배열에 넣어서 리턴한다.
+
+### 구현 결과
+
+메인 함수의 insertProgram 메서드로 실행할 Instruction을 메모리 상에 로딩할 수 있다.
+Instruction 정의는 주석을 참고.
+
+```
+ public static void insertProgram(Memory memory) {
+        memory.set((short)0, memory.bin2Short("1011 100 010100000")); //0x0000b MOV R4, 0x00A0 - R4에 160을 담는다.
+        memory.set((short)1, memory.bin2Short("1011 101 000000010")); //0x0010b MOV R5, 0x0002 - R5에 2를 담는다.
+        memory.set((short)2, memory.bin2Short("0001 001 100 000 101")); //0x0020b LOAD R1, R4, R5 - 162번째에서 데이터를 가져와서 R1
+        memory.set((short)3, memory.bin2Short("1000 010 001 1 00100")); //0x0030b ADD R2, R1, #4 - R2에 (0+4)
+        memory.set((short)4, memory.bin2Short("1001 011 001 000 010")); //0x0040b SUB R3, R1, R2 - R3에 (0 - 4) = -4 저장
+        memory.set((short)5, memory.bin2Short("0100 011 100 1 00100")); //0x0050b STORE R3, R4, #4 (-4)를 164에 저장.
+    }
+```
+
+### 메모리 Instruction 영역(Code)
+![img.png](img.png)
+
+아래처럼 메모리 상에 값이 임시로 저장된다. 일반적으로 Heap영역의 동작을 모사한다고 볼 수 있다.
+
+![img_1.png](img_1.png)
+
+### 레지스터 Dump
+1~5까지 더하는 계산기 Instruction을 넣었을 때 레지스터 덤프 값이다.
+15의 값을 메모리 주소에 저장하기 전에 레지스터 R5에 임시 저장된다.
+
+![img_2.png](img_2.png)
