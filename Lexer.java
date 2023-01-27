@@ -77,6 +77,9 @@ public class Lexer {
                     tokenSet.pop();
                     continue;
                 }
+                else if (token.charAt(0) == '/' && !token.substring(1).equals(name)) {
+                    throw new IllegalArgumentException("올바르지 않은 형식입니다.");
+                }
             }
 
             /**
@@ -93,7 +96,6 @@ public class Lexer {
              * 속성 처리 : bracket stack에 "<"이 있는 경우
              * attribute, value 값을 순차적으로 추가
              */
-
             if (!bracket.isEmpty() && bracket.peek().equals("<")) {
                 if (!tokenSet.isEmpty() && tokenSet.peek().isAttributeEmpty()) {
                     tokenSet.peek().attribute.add(token);
@@ -107,11 +109,9 @@ public class Lexer {
                     continue;
                 }
             }
-
             /**
              * 그 외의 항목은 새로운 Keyword로 node에 추가
              */
-
             Node e = new Node(token);
             if (!tokenSet.isEmpty()) {
                 tokenSet.peek().children.add(e); //아직 안닫혀있으면 children에 추가
@@ -128,31 +128,8 @@ public class Lexer {
     public static String toStr() {
         StringBuffer sb = new StringBuffer();
 
-        for (Node a : nodes) {
-            sb.append("element: \'" + a.element + "\',\n");
-            if (!a.text.isEmpty()) {
-                sb.append("text : \'" + a.text + "\' ,\n");
-            }
-            if (!a.attribute.isEmpty() && !a.value.isEmpty()) {
-                sb.append("attributes: [\n");
-                sb.append("\t {");
-                for (int i = 0; i < a.attribute.size(); i++) {
-                    sb.append("name : " + a.attribute.get(i) + ", value : \"" + a.value.get(i) + "\"\n");
-                }
-                sb.append("}\n");
-                sb.append("]\n");
-            }
-            if (!a.children.isEmpty()) {
-                sb.append("child : [");
-                for (int i = 0; i < a.children.size(); i++) {
-                    sb.append(a.children.get(i).element);
-                    if (i != a.children.size() - 1 && a.children.size() != 1) {
-                        sb.append(", ");
-                    }
-                }
-                sb.append("]\n");
-            }
-            sb.append("\n");
+        for (Node node : nodes) {
+            sb.append(node.toStr());
         }
         return sb.toString();
     }

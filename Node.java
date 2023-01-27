@@ -37,5 +37,34 @@ class Node {
         attributeModifiable = false;
         valueModifiable = false;
     }
+
+    public String toStr() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("element: \'" + element + "\',\n");
+        if (!text.isEmpty()) {
+            sb.append("text : \'" + text + "\' ,\n");
+        }
+        if (!attribute.isEmpty() && !value.isEmpty()) {
+            sb.append("attributes: [\n");
+            sb.append("\t {");
+            for (int i = 0; i < attribute.size(); i++) {
+                sb.append("name : " + attribute.get(i) + ", value : \"" + value.get(i) + "\"\n");
+            }
+            sb.append("}\n");
+            sb.append("]\n");
+        }
+        if (!children.isEmpty()) {
+            sb.append("child : [");
+            for (int i = 0; i < children.size(); i++) {
+                sb.append(children.get(i).element);
+                if (i != children.size() - 1 && children.size() != 1) {
+                    sb.append(", ");
+                }
+            }
+            sb.append("]\n");
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
 }
 

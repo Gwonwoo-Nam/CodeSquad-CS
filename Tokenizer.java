@@ -11,13 +11,16 @@ public class Tokenizer {
             if (cursor == str.length()) {
                 break;
             }
-            if (addToken(str, "[a-z]|[A-Z]|[_]|[0-9]|[/($)]")) { //Keywords : alphabet + underbar
+            if (addToken(str, "[a-z]|[A-Z]|[_-]|[0-9]|[/($)]")) { //Keywords : alphabet + underbar
                 continue;
             }
             if (addStringToken(str)) { //" " 문자열
                 continue;
             }
             if (skipToken(str, ' ')) { //공백 skip
+                continue;
+            }
+            if (skipToken(str, '\n')) { //개행 skip
                 continue;
             }
             addToken(str); //그 외 identifier(특수 문자)
