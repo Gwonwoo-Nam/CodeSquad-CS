@@ -2,8 +2,7 @@
 
 ### 학습 내용
 
-<details>
-<summary>Heap과 Stack</summary>
+## Heap과 Stack
 
 ### [Stack]
 
@@ -24,10 +23,7 @@
 - 호출 stack에서 재할당 후 pop되면 새로운 객체를 가리키는 지역 변수가 pop되므로 새 객체는 garbage가 되어 정리된다.
 - 불변 객체의 내부 primitive 변수는 private final ~로 선언되어있다. -> 불변 객체
 
-</details>
-
-<details>
-<summary>Garbage Collection의 원리</summary>
+## Garbage Collection의 원리
 
 - JVM 가비지 컬렉터가 힙에 할당된 불필요한 메모리(가비지)를 정리
 - 스택에서 더 이상 힙의 객체를 참조하지 않는 경우(Unreachable) 가비지가 된다.
@@ -105,10 +101,7 @@ Young 영역의 객체를 참조할 경우를 대비한 512 bytes의 카드 테�
     - 빠른 처리 속도, STW 최소화, CMS GC보다 효율적으로 App과 GC 진행 가능, 메모리 Compaction 지원
     - 자바 9 이후 기본 GC 방식
 
-</details>
-
-<details>
-<summary>JVM Memory Structure</summary>
+## JVM Memory Structure
 
 ![JVMMemoryStructure](https://res.cloudinary.com/practicaldev/image/fetch/s--1DBZ83TM--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://i.imgur.com/8uh8SPy.png)
 
@@ -134,22 +127,22 @@ Young 영역의 객체를 참조할 경우를 대비한 512 bytes의 카드 테�
     - 프로세스 당 한번 OS에 의해 load된다.
 
 ![JVMExecutionProcess](http://www.tcpschool.com/lectures/img_java_programming.png)
-</details>
+
 
 ### 기능 요구사항
 
-- [ ] 프로세스 메모리 구조를 다루는 프로그램이라서 메모리 주소를 값으로 다루는 포인터 변수를 직접 구현해야 한다.
-- [ ] 프로그램에서 처리하는 모든 포인터 메모리 사이즈는 4바이트를 기준으로 한다.
-- [ ] 프로그래밍 요구사항 에 나와있는 함수들을 구현한다.
-- [ ] 각 함수 동작을 확인하기 위해 특정한 시나리오대로 동작하는 프로그램을 별도 파일로 작성한다.
-- [ ] 다양한 경우에 대한 동작을 확인하기 위한 시나리오 흐름은 스스로 결정한다.
-- [ ] 아래 함수 내부에서 출력하지말고, 함수에서 return 한 값을 호출한 프로그램에서 출력한다.
+- [O] 프로세스 메모리 구조를 다루는 프로그램이라서 메모리 주소를 값으로 다루는 포인터 변수를 직접 구현해야 한다.
+- [O] 프로그램에서 처리하는 모든 포인터 메모리 사이즈는 4바이트를 기준으로 한다.
+- [O] 프로그래밍 요구사항 에 나와있는 함수들을 구현한다.
+- [O] 각 함수 동작을 확인하기 위해 특정한 시나리오대로 동작하는 프로그램을 별도 파일로 작성한다.
+- [O] 다양한 경우에 대한 동작을 확인하기 위한 시나리오 흐름은 스스로 결정한다.
+- [O] 아래 함수 내부에서 출력하지말고, 함수에서 return 한 값을 호출한 프로그램에서 출력한다.
 
 ### 프로그래밍 요구사항
 
 - 매개변수나 리턴에 필요한 타입은 스스로 판단해서 선언한다.
 - 리턴 명세가 있는 경우는 반드시 리턴하도록 구현한다.
-- [ ] 스택 동작을 담당하는 Stack 타입도 별도로 선언하고, 내부에는 Stack Pointer변수를 두고 몇 번째까지 쌓였는지 확인하도록 한다.
+- [O] 스택 동작을 담당하는 Stack 타입도 별도로 선언하고, 내부에는 Stack Pointer변수를 두고 몇 번째까지 쌓였는지 확인하도록 한다.
 
 
 1. init(stackSize, heapSize)
@@ -221,3 +214,75 @@ dap() 0xBF00 형태로 함수 이름과 스택의 주소를 리턴한다.
 
 11. reset()
     모든 stack과 heap 공간을 비우고 init했을 때와 동일하게 초기상태로 만든다.
+
+## 구현 결과
+아래의 예시 동작을 메모리 시뮬레이터로 작동시킨 결과이다.
+```
+base = memory.init(1024, 1024)
+memory.setSize("short", 4)
+memory.setSize("int", 8)
+memory.setSize("string", 16)
+arrayPointer = memory.malloc("int", 4)
+shortPointer = memory.malloc("short", 5)
+print(heapdump())
+call("foo", 2)
+string1 = memory.malloc("crong", 1)
+print(callstack())
+call("bar", 1)
+string2 = memory.malloc("jk", 2)
+returnFrom("bar")
+free(string1)
+print(heapdump())
+free(string2)
+print(callstack())
+garbageCollect()
+print(heapdump())
+reset()
+print(heapdump())
+```
+
+첫번째 heap dump 이전의 동작에서 타입의 size를 지정하고, int와 short 변수를 동적할당한다. 그 결과, heap 영역에 변수가 생성됨을 확인할 수 있다.
+```
+base = memory.init(1024, 1024)
+memory.setSize("short", 4)
+memory.setSize("int", 8)
+memory.setSize("string", 16)
+arrayPointer = memory.malloc("int", 4)
+shortPointer = memory.malloc("short", 5)
+print(heapdump())
+```
+
+![img_2.png](img_2.png)
+
+함수 호출을 한 후, 스택에 쌓인 메모리 포인터와 함께 call stack의 주소를 출력해보면, int 포인터, short 포인터, 그리고 foo() 콜 2개가 쌓여있는 것을 확인할 수 있다.
+
+
+```
+call("foo", 2)
+string1 = memory.malloc("crong", 1)
+print(callstack())
+```
+
+마지막으로, 복잡한 return 및 동적할당 및 free의 동작이다. 추가로 GarbageCollect가 정상적으로 일어나는 것도 확인 가능하다.
+free된 변수에서 heap에 stack과 연결되지 않은 메모리 영역은 heap에서 해제된다. 이를 heap dump로 확인할 수 있다. 
+```
+call("bar", 1)
+string2 = memory.malloc("jk", 2)
+returnFrom("bar")
+free(string1)
+print(heapdump())
+free(string2)
+print(callstack())
+garbageCollect()
+print(heapdump())
+reset()
+print(heapdump())
+```
+
+- GC 전
+
+![img_3.png](img_3.png)
+
+- GC 후
+
+![img_4.png](img_4.png)
