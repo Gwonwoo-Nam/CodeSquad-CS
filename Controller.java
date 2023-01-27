@@ -9,7 +9,8 @@ public class Controller {
         List<String> tokens = Tokenizer.getTokens();
         Lexer.run(tokens);
         List<Node> nodes = Lexer.getNodes();
-        Parser.run(nodes);
+        DOM dom = Parser.run(nodes);
+        System.out.println(dom.toStr());
     }
 
 

@@ -62,8 +62,8 @@ public class DOM {
             drawNode(e, depth, sb);
             if (!e.children.isEmpty()) {
                 draw(e.children, depth + 1, sb);
-                append(depth + 1, sb, "}\n");
-                append(depth, sb, "]\n");
+                append(depth + 1, sb, "]\n");
+                append(depth, sb, "}\n");
             }
         }
 
@@ -77,10 +77,11 @@ public class DOM {
         }
         if (!node.attribute.isEmpty() && !node.value.isEmpty()) {
             append(depth, sb, "attributes: [\n");
-            append(depth, sb, "{");
+            append(depth+1, sb, "{\n");
             for (int i = 0; i < node.attribute.size(); i++) {
-                append(depth, sb, "name : " + node.attribute.get(i) + ", value : \"" + node.value.get(i) + "\"}\n");
+                append(depth+1, sb, "name : " + node.attribute.get(i) + ", value : \"" + node.value.get(i) + "\"\n");
             }
+            append(depth+1, sb, "}\n");
             append(depth, sb, "]\n");
         }
         if (!node.children.isEmpty()) {
