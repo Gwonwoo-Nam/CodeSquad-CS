@@ -1,7 +1,6 @@
 ## 사전 학습
 
-<details>
-<summary>기본 용어 정리</summary>
+## 기본 용어 정리
 
 ### 클래스란?
 - 객체를 만들기 위한 **설계도, 틀**로 비유한다.
@@ -21,10 +20,7 @@
 
 객체와 인스턴스는 엄격하게 구분하기 힘든 추상적인 개념이며, 주로 인스턴스는 원본으로부터 생성되었다는 것을 강조하는 의미로 많이 쓰인다.
 
-</details>
-
-<details>
-<summary>프로그래밍 구조</summary>
+## 프로그래밍 구조
 
 ### 프로퍼티
 Key=Value 형식으로 파라미터 정보를 저장하기 위한 파일 확장자. Key Value를 (String, String)형태로 저장하는 단순화된 컬렉션이라고 보면 된다.
@@ -50,10 +46,8 @@ Java에서는 java.util의 ResourceBundle 라이브러리를 이용해서 proper
   - CaffeineBeverage beverage = new Coffee(); (O)
 - 다운캐스팅 : 상위 클래스를 하위 클래스로 타입 변환하는 것을 의미한다.
   - Coffee coffee = (Coffee)beverage;
-</details>
 
-<details>
-<summary>객체지향 개발 5대 원리</summary>
+## 객체지향 개발 5대 원리
 
 [객체지향 5가지 원리 참고자료](https://www.nextree.co.kr/p6960/)
 ### 단일 책임의 원칙(Single Responsibility Principle)
@@ -117,10 +111,8 @@ Java에서는 java.util의 ResourceBundle 라이브러리를 이용해서 proper
 - 구체적인 것에 의존하는 경우, 인터페이스에 의존하도록 변경하여 의존관계를 역전시킨다.
 ![Layering](https://www.nextree.co.kr/content/images/2021/01/jdchoi_20140305_layer.png)
 
-</details>
 
-<details>
-<summary>GRASP 패턴</summary>
+## GRASP 패턴
 
 ### 정의
 General Responsibility Assignment Software Patterns의 축약어로, 객체 지향 디자인 시 각 객체에 책임을 할당하는 것에 대한 원칙들이다. 일반적으로 디자인 패턴으로 불리는 것과 같은 구체적인 구조가 아니고, 디자인 패턴이 GRASP 패턴을 각각 구체적으로 구현한 것이라 볼 수 있다.
@@ -163,8 +155,6 @@ General Responsibility Assignment Software Patterns의 축약어로, 객체 지�
 
 ### Protected Variations
 - 변경 여지가 있는 곳에 안정된 인터페이스를 정의해서 사용한다.
-
-</details>
 
 ## 직선 길이
 
