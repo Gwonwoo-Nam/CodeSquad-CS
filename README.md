@@ -8,10 +8,9 @@
 
 - 링크드 리스트 구조(Linked List)를 구현하기 위해서 데이터 구조에는 다음 영상 정보를 참조할 수 있어야 한다.
 
-### 학습 내용
+## 학습 내용
 
-<details>
-<summary>Data Structure(List)</summary>
+## Data Structure(List)
 
 - 데이터 스트럭쳐를 배우는 이유 : 자료 구조를 통한 메모리의 효율적 사용
 - RAM(Random Access Memory) : 데이터 주소를 통해 데이터에 접근하는 시간이 동일하다.
@@ -23,9 +22,7 @@
         - 서로 떨어져있기 떄문에 가변적으로 데이터를 관리하기 용이하다.
         - 엘리먼트의 index에 따라서 데이터를 탐색하는데 걸리는 시간이 상이하다.(비효율적)
 
-</details>
-<details>
-<summary>Linked List의 구현</summary>
+## Linked List의 구현
 
 - 연결 리스트의 구조
   ![img.png](img.png)
@@ -41,9 +38,7 @@
             - value 필드 : 현재 노드의 값을 저장
         - head 필드 : node 참조 변수를 저장한다.
 
-</details>
-<details>
-<summary>메모리 구조(code, data, heap, stack) </summary>
+## 메모리 구조(code, data, heap, stack)
 
 - code : 코드가 보관되는 영역
 - data : 전역변수, static 변수
@@ -60,9 +55,8 @@
   - 정적 할당이므로 필요한 메모리 공간을 컴파일 타임에 알 수 있다.
 
 따라서, 객체의 배열의 경우 객체를 참조하는 변수(4byte)는 stack 영역에 생성되며, 동적 할당되는 객체의 인스턴스 배열은 heap 영역에 연속적으로 생성된다.
-</details>
-<details>
-<summary>연속 메모리를 차지하게 생성하고 조회할 수 있을까?</summary>
+
+## 연속 메모리를 차지하게 생성하고 조회할 수 있을까?
 
 ### 연속 메모리 상에 생성하기
 처음에는 정보를 가지는 각 인스턴스들의 배열로 선언하려고 했는데, 문제의 제약 조건 중 배열에 저장하지 말라는 조건이 있어, 저장하지 않고 반복문으로 인스턴스 생성 후 바로 출력하도록 처리하였다. 반복적으로 생성했을
@@ -76,7 +70,6 @@ public VideoArrayList(int number) {
     }
 ```
 
-정확하게는 그렇다고 여기까지 생각했었다.
 
 ### 연속 메모리 상에 있는지 조회하기
 그리고, 아래 hash code 확인하는 라이브러리로 객체의 메모리가 과연 연속으로 존재하는지 조회하였는데 일단 불연속적으로 존재한다는 결론을 내렸다.
@@ -133,10 +126,7 @@ baee: 0x8
 aafe: 0x8
 ```
 
-</details>
-
-<details>
-<summary>ArrayList는 어떻게 동적으로 늘어날까?</summary>
+## ArrayList는 어떻게 동적으로 늘어날까?
 
 ### Array와 ArrayList의 차이
   - Array는 크기가 고정되어있는 정적배열, arrayList는 동적 배열이다.
@@ -186,7 +176,6 @@ newCapacity = size+1 + oldCapacity >> 1로 계산되는 것을 확인할 수 있
         }
     }
 ```
-</details>
 
 ### 프로그래밍 요구사항
 
@@ -201,6 +190,10 @@ newCapacity = size+1 + oldCapacity >> 1로 계산되는 것을 확인할 수 있
 - [O] 13개 모두 생성하고 나면 정해진 크기단위로 접근해서 탐색할 수 있어야 한다
 - [O] 생성한 영상 순서대로 제목(id):재생시간 형식으로 출력한다.
 
+### 구현 결과
+
+![img_2.png](img_2.png)
+
 ## 미션 2 - 영상 목록 편집하기
 
 ### 학습 목표
@@ -212,20 +205,7 @@ newCapacity = size+1 + oldCapacity >> 1로 계산되는 것을 확인할 수 있
 
 ### 학습 내용
 
-<details>
-<summary>자료 구조에서 지원하는 연산들</summary>
-
-- 선회 : 
-- 찾기 : get 
-- 삽입 : add, insert
-- 삭제 : delete
-- 정렬 :
-- 병합 :
-- 기타 : render
-
-</details>
-<details>
-<summary>List Operation 구현하기</summary>
+### List Operation 구현하기
 
 - 연결 리스트의 삽입
     - array list는 삽입 시 뒤의 모든 엘리먼트의 자리 이동이 필요해 느린 반면, linked list는 참조값 2개만 변경시키면 되어서 빠르다.
@@ -240,9 +220,7 @@ newCapacity = size+1 + oldCapacity >> 1로 계산되는 것을 확인할 수 있
 - 연결 리스트의 조회
     - 참조변수를 counter만큼 next로 넘긴다.
 
-</details>
-<details>
-<summary>점근 표기법(시간 복잡도, 공간 복잡도)</summary>
+### 점근 표기법(시간 복잡도, 공간 복잡도)
 
 - 시간 복잡도를 나타내기 위한 표기법 : 알고리즘의 효율성을 표기해주는 표기법, 기본 연산의 횟수
   - Big-O : 최대의 시간이 걸리는 경우를 가정한다.(최악의 경우)
@@ -263,9 +241,7 @@ newCapacity = size+1 + oldCapacity >> 1로 계산되는 것을 확인할 수 있
   - 선택 정렬 : n^2
   - 외판원 문제 : n!
 
-</details>
-<details>
-<summary>Big O 확인하기</summary>
+### Big O 확인하기
 
 - add, insert
   - 반복문은 n개의 요소가 있다고 했을 시 tail의 요소를 찾는 경우가 발생하고 시간 복잡도는 O(n)이다.
@@ -294,7 +270,6 @@ while(currentNode.getNext() != null) {
         }
 ```
 
-</details>
 
 ### 기능요구사항
 
@@ -329,3 +304,6 @@ while(currentNode.getNext() != null) {
   - [O] 매칭되는 노드를 삭제하고 나면 탐색을 중지하고 뒤에 있는 노드를 삭제하지 않는다
 - [O] render를 입력하면 링크드 리스트를 전체를 탐색하면서 재생 시간을 더한다.
 
+### 구현 결과
+
+![img_3.png](img_3.png)
