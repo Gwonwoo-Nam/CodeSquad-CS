@@ -11,7 +11,7 @@ public class ClassifierAlpha {
     public static Set<Integer> factors(int number) {
         HashSet<Integer> factors = new HashSet<>();
 
-        IntStream.range(1,(int)Math.sqrt(number)+1)
+        IntStream.rangeClosed(1,(int)Math.sqrt(number))
             .filter(index -> isFactor(number, index))
             .forEach(index -> {
             factors.add(index);
@@ -36,6 +36,7 @@ public class ClassifierAlpha {
     public static boolean isDeficient(int number) {
         return sum(factors(number)) - number < number;
     }
+
     public static void main(String[] args) {
 
         System.out.println(ClassifierAlpha.isPerfect(10));
