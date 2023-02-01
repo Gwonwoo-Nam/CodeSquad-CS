@@ -117,11 +117,57 @@ x에 E를 대입한 것으로 항을 reduce 시킬 수 있음을 의미
 람다를 지원하기 위해 타입 추론을 강화, 함수형 인터페이스를 만들었다. 함수형 인터페이스는 하나의 추상 메소드로 이루어진 인터페이스,
 함수의 시그니쳐가 정의되므로 컴파일러가 생략된 정보들을 추론한다.
 
+### Functional Interface
 @FunctionalInterface
 - 단 하나의 추상 메소드만 가질 수 있는 함수형 인터페이스
 - 추상 메소드가 없거나, 2개 이상이면 컴파일 에러 발생
+
+### Predicate<T>
+- boolean value function : 하나의 인자를 받아서 boolean value로 반환
+- test를 통해서 적용
+```
+public class PredicateTest {
+
+    public static void main(String[] args) {
+        Predicate<Integer> oddNums = (num -> num % 2 == 0);
+        Predicate<Integer> positiveNums = (num -> num > 0);
+
+        Integer[] array = IntStream.rangeClosed(-10, 10).boxed().toArray(Integer[]::new);
+
+        filter(array, oddNums);
+        filter(array, positiveNums);
+    }
+
+    public static <T> List<T> filter(T[] array, Predicate<T> predicate) {
+        List<T> result = new ArrayList<>();
+        for (T t : array) {
+            if (predicate.test(t))
+                result.add(t);
+        }
+        return result;
+    }
+}
+```
+
+### BiPredicate<T, U>
+- 두 개의 인자를 받아서 boolean value로 반환
+- test를 통해서 적용
+
+### Consumer<T>
+- 인자를 하나 받되 return 값이 없는 경우
+
+### Function<T,R>
+- 인자를 하나 받아서 결과를 반환한다.
+- apply를 통해서 적용한다.
+
+### Supplier<T>
+- 인자를 받지 않고 Result를 반환하는 경우
 
 ### 메소드 참조
 - 메소드를 간결하게 지칭할 수 있는 방법
 - 람다가 쓰이는 곳 어디서나 사용할 수 있다.
 - ex) String::valueOf
+
+### FlatMap
+- 중복된 스트림을 1차원으로 평면화시키는 메서드
+- 리스트를 하나의 스트림처럼 다룰 수 있다.
