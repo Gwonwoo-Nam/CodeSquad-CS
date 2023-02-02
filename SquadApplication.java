@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class Application {
+public class SquadApplication {
 
      public static void main(String[] args) {
          SquadSet a = new SquadSet(List.of(1,2,3));
