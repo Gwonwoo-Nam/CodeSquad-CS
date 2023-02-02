@@ -14,7 +14,7 @@ public class SquadSet <T> {
         List<T> arr = Collections.unmodifiableList(elements);
         List<T> otherArr = Collections.unmodifiableList((List<T>)other.getElements());
 
-        return Stream.concat(arr.stream(), otherArr.stream()).filter(e -> (arr.contains(e) && otherArr.contains(e))).collect(
+        return Stream.concat(arr.stream(), otherArr.stream()).distinct().collect(
                 Collectors.toUnmodifiableList());
     }
 
@@ -35,7 +35,7 @@ public class SquadSet <T> {
     public T[] resultAll() {
         List<T> arr = Collections.unmodifiableList(elements);
 
-        return Stream.concat(arr.stream(), otherArr.stream()).collect(Collectors.toUnmodifiableList());
+        return (T[])arr.stream().toArray();
     }
 
     public List<T> getElements() {
