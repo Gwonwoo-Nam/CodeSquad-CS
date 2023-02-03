@@ -3,9 +3,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class CountSet<K> {
+public class CountSet<K, R> {
 
     private final List<K> elements;
     private final List<Integer> counts;
@@ -22,6 +26,26 @@ public class CountSet<K> {
     CountSet(List<K> elements, List<Integer> counts) {
         this.elements = elements;
         this.counts = counts;
+    }
+
+    public CountSet map(Function<K, R> mapFunction) { // Type T->R
+        List<K> arr = Collections.unmodifiableList(elements);
+        List<Integer> cnt = Collections.unmodifiableList(counts);
+        return new CountSet(arr.stream().map(mapFunction).collect(Collectors.toUnmodifiableList())
+            , cnt.stream().collect(Collectors.toUnmodifiableList()));
+    }
+
+    public CountSet filter(Predicate<K> filterFunction) {
+        List<K> arr = Collections.unmodifiableList(elements);
+        List<Integer> cnt = Collections.unmodifiableList(counts);
+        return new CountSet(
+            arr.stream().filter(filterFunction).collect(Collectors.toUnmodifiableList())
+            , cnt.stream().collect(Collectors.toUnmodifiableList()));
+    }
+
+    public void display(BinaryOperator<K> reducer, Consumer<K> consumer) {
+        List<K> arr = Collections.unmodifiableList(elements);
+        arr.stream().reduce(reducer).ifPresent(consumer);
     }
 
     public CountSet append(K element) {
@@ -87,7 +111,8 @@ public class CountSet<K> {
                 .map(arrVal -> arr.indexOf(arrVal)) //value가 일치하는 arr의 index를 찾는다.
                 .findFirst()
                 .ifPresentOrElse(arrIndex -> {
-                    cnt.set(arrIndex, cnt.get(arrIndex) + otherCnt.get(otherIndex)); //일치하는 값이 있으면 합치기
+                    cnt.set(arrIndex,
+                        cnt.get(arrIndex) + otherCnt.get(otherIndex)); //일치하는 값이 있으면 합치기
                 }, () -> {
                     arr.add(otherArr.get(otherIndex)); //일치하는게 없으면 새로 추가하기
                     cnt.add(otherCnt.get(otherIndex));
@@ -96,7 +121,6 @@ public class CountSet<K> {
         });
         return new CountSet(arr, cnt);
     }
-
 
 
     public CountSet complement(CountSet other) {
@@ -149,7 +173,7 @@ public class CountSet<K> {
             , arr.stream()
             .filter(otherArr::contains)
             .distinct()
-            .mapToInt((val)->1)
+            .mapToInt((val) -> 1)
             .boxed()
             .collect(Collectors.toUnmodifiableList()));
     }
