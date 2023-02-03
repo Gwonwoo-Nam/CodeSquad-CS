@@ -1,5 +1,3 @@
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CountApplication {
@@ -9,7 +7,14 @@ public class CountApplication {
         CountSet a = new CountSet(inputA);
         CountSet b = new CountSet(Map.of(1,1,3,3));
 
-        System.out.println(a.sum(b));
+        a.append(3).resultAll();
+        a.append(4).resultAll();
+        b.remove(1).resultAll();
+        b.remove(3).resultAll();
+        System.out.println("COUNT:"+b.countFor(3));
+        a.sum(b).resultAll();
         a.complement(b).resultAll();
+        a.intersect(b).resultAll();
+
     }
 }
