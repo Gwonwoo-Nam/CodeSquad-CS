@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class CountSet<K, R> {
 
@@ -36,16 +37,28 @@ public class CountSet<K, R> {
     }
 
     public CountSet filter(Predicate<K> filterFunction) {
-        List<K> arr = Collections.unmodifiableList(elements);
-        List<Integer> cnt = Collections.unmodifiableList(counts);
-        return new CountSet(
-            arr.stream().filter(filterFunction).collect(Collectors.toUnmodifiableList())
-            , cnt.stream().collect(Collectors.toUnmodifiableList()));
+        List<K> arr = elements.stream().collect(Collectors.toList());
+        List<Integer> cnt = counts.stream().collect(Collectors.toList());
+
+        arr.stream().forEach((value) -> {
+            if (!filterFunction.test(value)) {
+                cnt.set(arr.indexOf(value), 0); //cnt에서 값 없애기\
+                arr.set(arr.indexOf(value), null); //arr null처리
+
+            }
+        });
+        return filterZero(arr, cnt);
     }
 
     public void display(BinaryOperator<K> reducer, Consumer<K> consumer) {
         List<K> arr = Collections.unmodifiableList(elements);
-        arr.stream().reduce(reducer).ifPresent(consumer);
+        List<Integer> cnt = Collections.unmodifiableList(counts);
+        List<String> sb = new ArrayList<>();
+        IntStream.range(0, arr.size()).forEach(val -> {
+            Elements<K> ele = new Elements<K>(arr.get(val), cnt.get(val));
+            sb.add(ele.toStr());
+        });
+        sb.stream().reduce((BinaryOperator<String>) reducer).ifPresent((Consumer<String>)consumer);
     }
 
     public CountSet append(K element) {
