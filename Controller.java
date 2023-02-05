@@ -1,18 +1,44 @@
-import Piece.Color;
-import Position.File;
-import Position.Rank;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Controller {
 
-    public static void run() {
+    public static void run() throws IOException {
         OutputView.bootProgram();
-
         Board board = new Board();
+
         initializeBoards(board);
-        OutputView.initialize();
+
+        while (true) {
+            OutputView.getCommand();
+            try {
+                String command = InputView.readLine();
+                if (command.matches("^[?][A-H][1-8]$")) {
+                    List<Position> positions = board.getPossiblePositions(
+                        new Position(command.charAt(2) - '1', command.charAt(1) - 'A'));
+                    OutputView.printPossiblePositions(positions);
+                }
+                if (command.matches("^[A-H][1-8][A-H][1-8]$")) {
+                    List<String> pos = Arrays.stream(command.split(""))
+                        .filter(str -> !str.isEmpty()).collect(
+                            Collectors.toList());
+                    Position fromPos = new Position(pos.get(1).charAt(0) - '1',
+                        pos.get(0).charAt(0) - 'A');
+                    Position toPos = new Position(pos.get(3).charAt(0) -'1',
+                        pos.get(2).charAt(0)-'A');
+                    board.move(fromPos, toPos);
+                    OutputView.render(board.display());
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
 
     }
+
 
     public static void initializeBoards(Board board) {
         board.initPiece(new Pawn(new Position(File.A, Rank.TWO), Color.BLACK));
@@ -46,6 +72,11 @@ public class Controller {
         board.initPiece(new Bishop(new Position(File.C, Rank.EIGHT), Color.WHITE));
         board.initPiece(new Bishop(new Position(File.F, Rank.EIGHT), Color.WHITE));
         board.initPiece(new Queen(new Position(File.E, Rank.EIGHT), Color.WHITE));
+
+        //board.setPiece(new Queen(new Position(File.E, Rank.SIX), Color.WHITE));
+
+        OutputView.initialize();
+        OutputView.render(board.display());
     }
 
 }
