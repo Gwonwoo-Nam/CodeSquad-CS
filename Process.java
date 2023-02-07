@@ -9,10 +9,9 @@ public class Process extends Thread implements Comparable<Process> {
     Process(String processId, int runningTime, int deadline) {
         pcb = new PCB(processId, runningTime, deadline);
 
-        initThreads();
     }
 
-    private void initThreads() {
+    public void initThread() {
         int threadNumbers = pcb.getRunningTime() / 2;
         for (int i = 0; i<threadNumbers;i++) {
             threads.add(new Thread(new Runnable() {
@@ -22,8 +21,6 @@ public class Process extends Thread implements Comparable<Process> {
                 }
             }));
         }
-
-        System.out.println(pcb.toString() + "- 스레드 " + threadNumbers + "개");
     }
 
     public void startThreads() {
@@ -99,5 +96,13 @@ public class Process extends Thread implements Comparable<Process> {
     @Override
     public String toString() {
         return pcb.toString();
+    }
+
+    public String getThreadInfo() {
+        return pcb.getBriefInfo() + " - 스레드 " + threads.size() + "개";
+    }
+
+    public int getThreadSize() {
+        return threads.size();
     }
 }

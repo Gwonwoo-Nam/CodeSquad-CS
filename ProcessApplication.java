@@ -19,7 +19,7 @@ public class ProcessApplication {
     public static void main(String[] args) {
         List<Process> processList = initProcessList();
 
-        CpuScheduler cpuScheduler = new CpuScheduler();
+        CpuScheduler cpuScheduler = new CpuScheduler(ThreadOption.MULTI_THREAD);
         cpuScheduler.run(processList);
     }
 }
