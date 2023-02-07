@@ -12,10 +12,16 @@ public class CpuScheduler {
     private List<Process> executionProcessList = new ArrayList<>();
 
     private Process recentExecution;
+    private ThreadOption threadOption;
+
+    CpuScheduler(ThreadOption threadOption) {
+        this.threadOption = threadOption;
+    }
 
     public void run(List<Process> processList) {
         executionProcessList = initRandomProcess(processList);
         queueReady();
+        initThreads();
         display();
 
         while (true) {
@@ -40,7 +46,12 @@ public class CpuScheduler {
             Process currentProcess = readyQueue.poll();
 
             //프로세스를 실행한다.
-            currentProcess.execute();
+            if (threadOption.equals(ThreadOption.SINGLE_THREAD)) {
+                currentProcess.execute();
+            }
+            if (threadOption.equals(ThreadOption.MULTI_THREAD)) {
+                currentProcess.startThreads();
+            }
             //나머지 프로세스의 대기시간 증가
             doWait();
             //프로세스 상태를 출력한다.
@@ -58,6 +69,19 @@ public class CpuScheduler {
         display();
         showStatistics();
 
+    }
+
+    private void initThreads() {
+        System.out.println("이 프로그램은");
+        int totalThread = 0;
+        if (threadOption.equals(ThreadOption.MULTI_THREAD)) {
+            for (Process p : executionProcessList) {
+                p.initThread();
+                System.out.println(p.getThreadInfo());
+                totalThread += p.getThreadSize();
+            }
+        }
+        System.out.println("총 스레드는 " + totalThread + "개입니다.\n");
     }
 
     public List<Process> initRandomProcess(List<Process> processList) {
@@ -79,31 +103,31 @@ public class CpuScheduler {
         StringBuffer sb = new StringBuffer();
 
         int[] waitingTimes = executionProcessList.stream()
-                .mapToInt(p->p.getWaitingTime()).toArray();
+                .mapToInt(p -> p.getWaitingTime()).toArray();
         int[] executionTimes = executionProcessList.stream()
-                .mapToInt(p->p.getReturnTime()).toArray();
-        int totalWaitingTime = Arrays.stream(waitingTimes).reduce((a,b) -> a+b).getAsInt();
-        int totalExecutionTime = Arrays.stream(executionTimes).reduce((a,b) -> a+b).getAsInt();
+                .mapToInt(p -> p.getReturnTime()).toArray();
+        int totalWaitingTime = Arrays.stream(waitingTimes).reduce((a, b) -> a + b).getAsInt();
+        int totalExecutionTime = Arrays.stream(executionTimes).reduce((a, b) -> a + b).getAsInt();
 
         sb.append("기한부 스케줄링 (deadline scheduling)이 종료되었습니다.\n");
         sb.append("평균 대기시간 = (");
         sb.append(executionProcessList.stream()
-                .map(p->Integer.toString(p.getWaitingTime()))
+                .map(p -> Integer.toString(p.getWaitingTime()))
                 .reduce((str1, str2) -> str1 + " + " + str2).get());
         sb.append(") / ");
         sb.append(executionProcessList.size());
         sb.append(" = ");
-        sb.append(String.format("%.2f",totalWaitingTime / (double)executionProcessList.size()));
+        sb.append(String.format("%.2f", totalWaitingTime / (double)executionProcessList.size()));
         sb.append("sec\n");
 
         sb.append("평균 반환시간 = (");
         sb.append(executionProcessList.stream()
-                .map(p->Integer.toString(p.getReturnTime()))
+                .map(p -> Integer.toString(p.getReturnTime()))
                 .reduce((str1, str2) -> str1 + " + " + str2).get());
         sb.append(") / ");
         sb.append(executionProcessList.size());
         sb.append(" = ");
-        sb.append(String.format("%.2f",totalExecutionTime / (double)executionProcessList.size()));
+        sb.append(String.format("%.2f", totalExecutionTime / (double)executionProcessList.size()));
         sb.append("sec\n\n---");
 
         System.out.println(sb);
@@ -123,8 +147,6 @@ public class CpuScheduler {
         }
         System.out.println(".");
     }
-
-
 
     /**
      * 누적 동작 시간이 최대 동작 시간보다 작은 경우,

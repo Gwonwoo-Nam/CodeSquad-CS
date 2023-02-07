@@ -81,4 +81,16 @@ public class PCB {
         return sb.toString();
     }
 
+    public String getBriefInfo() {
+        StringBuffer sb = new StringBuffer();
+
+        sb.append("프로세스");
+        sb.append(processId);
+        sb.append("(");
+        sb.append(runningTime);
+        sb.append("초)");
+
+        return sb.toString();
+    }
+
 }
