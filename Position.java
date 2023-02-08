@@ -29,6 +29,7 @@ public class Position {
         return rank.getLoc();
     }
 
+    
     public boolean equals(Position position) {
         if (this.getFileLocation() == position.getFileLocation() &&
             this.getRankLocation() == position.getRankLocation()) {

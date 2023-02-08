@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Queen extends Piece implements Movable {
+public class Queen extends Piece {
 
     Queen(Position position, Color color) {
         super(position, color);

@@ -1,6 +1,6 @@
 import java.util.List;
 
-public class Piece implements Movable {
+abstract class Piece {
 
     protected Position position;
     private final Color color;
@@ -29,15 +29,10 @@ public class Piece implements Movable {
     }
 
 
-    public List<Position> possiblePositions() {
-
-        return null;
-    }
+    abstract List<Position> possiblePositions();
 
 
-    public boolean isOnRightPosition() {
-        return false;
-    }
+    abstract boolean isOnRightPosition();
 
 
     public void addPositionInBoard(int rankIndex, int fileIndex, List<Position> positions) {

@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Rook extends Piece implements Movable {
+public class Rook extends Piece {
 
     Rook(Position position, Color color) {
         super(position, color);

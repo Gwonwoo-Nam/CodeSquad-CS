@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pawn extends Piece implements Movable {
+public class Pawn extends Piece {
 
     Pawn(Position position, Color color) {
         super(position, color);
