@@ -3,20 +3,24 @@ import java.util.List;
 import java.util.Optional;
 
 public class Board {
-
+    Board(List<Piece> pieceList) {
+        for (Piece p: pieceList) {
+            initPiece(p);
+        }
+    }
     private List<Piece> pieceList = new ArrayList<>();
     private Color turn = Color.BLACK; //흑말부터 시작
 
     public void initPiece(Piece piece) {
         if (!piece.isOnRightPosition()) {
-            throw new IllegalArgumentException("[ERROR] 말의 위치가 적절하지 않습니다.");
+            Errors.ILLEGAL_POSITION.throwError();
         }
         if (hasPlace(piece.getPosition()) != null) {
-            throw new IllegalArgumentException("[ERROR] 이미 말이 존재합니다.");
+            Errors.PIECE_EXIST.throwError();
         }
         pieceList.add(piece);
         if (hasMoreThanMax()) {
-            throw new IllegalArgumentException("[ERROR] 지정된 말의 개수보다 많습니다.");
+            Errors.EXCEED_MAX.throwError();
         }
     }
 
@@ -75,7 +79,7 @@ public class Board {
 
     public List<Position> getPossiblePositions(Position from) {
         if (hasPlace(from) == null) {
-            throw new IllegalArgumentException("[ERROR] 말이 없습니다.");
+            Errors.NOT_EXIST_PIECE.throwError();
         }
         Piece p = hasPlace(from);
 
@@ -236,7 +240,7 @@ public class Board {
 
     public void setPiece(Piece piece) {
         if (hasPlace(piece.getPosition()) != null) {
-            throw new IllegalArgumentException("[ERROR] 이미 말이 존재합니다.");
+            Errors.PIECE_EXIST.throwError();
         }
         pieceList.add(piece);
     }
@@ -246,7 +250,7 @@ public class Board {
             if (pos.equals(to)) {
                 Piece piece = hasPlace(from);
                 if (!piece.getColor().equals(turn)) {
-                    throw new IllegalArgumentException("[ERROR] 현재 차례가 아닙니다.");
+                    Errors.NOT_YOUR_TURN.throwError();
                 }
                 if (piece instanceof Pawn) {
                     promotePawn(piece,to);

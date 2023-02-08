@@ -7,6 +7,7 @@ public enum Rank {
     SIX(5,"6"),
     SEVEN(6,"7"),
     EIGHT(7,"8");
+
     private String rank;
     private int loc;
 
@@ -25,7 +26,7 @@ public enum Rank {
             case 5 -> SIX;
             case 6 -> SEVEN;
             case 7 -> EIGHT;
-            default -> throw new IllegalArgumentException("[ERROR] index Out of Bounds");
+            default -> throw new IllegalArgumentException(Errors.OUT_OF_INDEX.get());
         };
     }
 

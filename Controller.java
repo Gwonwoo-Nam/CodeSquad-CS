@@ -2,17 +2,14 @@ import java.io.IOException;
 import java.util.List;
 
 public class Controller {
-    private static Board board = new Board();
+    private static Board board;
 
     public static void run() throws IOException {
-        OutputView.bootProgram();
-
-        initializeBoards();
+        initializeBoard();
 
         while (true) {
-            OutputView.getCommand();
             try {
-                String command = InputView.readLine();
+                String command = InputView.getCommandFromUser();
 
                 if (ControlMenu.POSSIBLE_LOCATION.choose(command)) {
                     checkPossibleLocations(command);
@@ -28,6 +25,14 @@ public class Controller {
             }
         }
 
+    }
+
+    private static void initializeBoard() {
+        OutputView.bootProgram();
+        List<Piece> pieceList = PieceFactory.initializeBoards();
+        board = new Board(pieceList);
+        OutputView.initialize();
+        OutputView.render(board.display());
     }
 
     private static void move(String command) {
@@ -52,43 +57,6 @@ public class Controller {
         OutputView.printPossiblePositions(positions);
     }
 
-    public static void initializeBoards() {
-        board.initPiece(new Pawn(new Position(File.A, Rank.TWO), Color.BLACK));
-        board.initPiece(new Pawn(new Position(File.B, Rank.TWO), Color.BLACK));
-        board.initPiece(new Pawn(new Position(File.C, Rank.TWO), Color.BLACK));
-        board.initPiece(new Pawn(new Position(File.D, Rank.TWO), Color.BLACK));
-        board.initPiece(new Pawn(new Position(File.E, Rank.TWO), Color.BLACK));
-        board.initPiece(new Pawn(new Position(File.F, Rank.TWO), Color.BLACK));
-        board.initPiece(new Pawn(new Position(File.G, Rank.TWO), Color.BLACK));
-        board.initPiece(new Pawn(new Position(File.H, Rank.TWO), Color.BLACK));
-        board.initPiece(new Rook(new Position(File.A, Rank.ONE), Color.BLACK));
-        board.initPiece(new Rook(new Position(File.H, Rank.ONE), Color.BLACK));
-        board.initPiece(new Knight(new Position(File.B, Rank.ONE), Color.BLACK));
-        board.initPiece(new Knight(new Position(File.G, Rank.ONE), Color.BLACK));
-        board.initPiece(new Bishop(new Position(File.C, Rank.ONE), Color.BLACK));
-        board.initPiece(new Bishop(new Position(File.F, Rank.ONE), Color.BLACK));
-        board.initPiece(new Queen(new Position(File.E, Rank.ONE), Color.BLACK));
 
-        board.initPiece(new Pawn(new Position(File.A, Rank.SEVEN), Color.WHITE));
-        board.initPiece(new Pawn(new Position(File.B, Rank.SEVEN), Color.WHITE));
-        board.initPiece(new Pawn(new Position(File.C, Rank.SEVEN), Color.WHITE));
-        board.initPiece(new Pawn(new Position(File.D, Rank.SEVEN), Color.WHITE));
-        board.initPiece(new Pawn(new Position(File.E, Rank.SEVEN), Color.WHITE));
-        board.initPiece(new Pawn(new Position(File.F, Rank.SEVEN), Color.WHITE));
-        board.initPiece(new Pawn(new Position(File.G, Rank.SEVEN), Color.WHITE));
-        board.initPiece(new Pawn(new Position(File.H, Rank.SEVEN), Color.WHITE));
-        board.initPiece(new Rook(new Position(File.A, Rank.EIGHT), Color.WHITE));
-        board.initPiece(new Rook(new Position(File.H, Rank.EIGHT), Color.WHITE));
-        board.initPiece(new Knight(new Position(File.B, Rank.EIGHT), Color.WHITE));
-        board.initPiece(new Knight(new Position(File.G, Rank.EIGHT), Color.WHITE));
-        board.initPiece(new Bishop(new Position(File.C, Rank.EIGHT), Color.WHITE));
-        board.initPiece(new Bishop(new Position(File.F, Rank.EIGHT), Color.WHITE));
-        board.initPiece(new Queen(new Position(File.E, Rank.EIGHT), Color.WHITE));
-
-        //board.setPiece(new Queen(new Position(File.E, Rank.SIX), Color.WHITE));
-
-        OutputView.initialize();
-        OutputView.render(board.display());
-    }
 
 }

@@ -2,8 +2,8 @@ import java.util.List;
 
 public interface Movable {
 
-    public List<Position> possiblePositions();
+    List<Position> possiblePositions();
 
-    public boolean isOnRightPosition();
+    boolean isOnRightPosition();
 
 }

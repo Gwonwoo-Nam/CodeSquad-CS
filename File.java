@@ -29,7 +29,7 @@ public enum File {
             case 5 -> F;
             case 6 -> G;
             case 7 -> H;
-            default -> throw new IllegalArgumentException("[ERROR] index Out of Bounds");
+            default -> throw new IllegalArgumentException(Errors.OUT_OF_INDEX.get());
         };
     }
 
