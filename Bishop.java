@@ -7,10 +7,10 @@ public class Bishop extends Piece implements Movable {
         super(position, color);
         score = 3;
         if (color == Color.WHITE) {
-            mark = "\u2657";
+            mark = '\u2657';
         }
         if (color == Color.BLACK) {
-            mark = "\u265D";
+            mark = '\u265D';
         }
     }
 

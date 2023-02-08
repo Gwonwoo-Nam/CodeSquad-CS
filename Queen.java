@@ -7,10 +7,10 @@ public class Queen extends Piece implements Movable {
         super(position, color);
         score = 9;
         if (color == Color.WHITE) {
-            mark = "\u2655";
+            mark = '\u2655';
         }
         if (color == Color.BLACK) {
-            mark = "\u265B";
+            mark = '\u265B';
         }
     }
 

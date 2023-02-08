@@ -7,10 +7,10 @@ public class Knight extends Piece implements Movable {
         super(position, color);
         score = 3;
         if (color == Color.WHITE) {
-            mark = "\u2658";
+            mark = '\u2658';
         }
         if (color == Color.BLACK) {
-            mark = "\u265E";
+            mark = '\u265E';
         }
     }
 

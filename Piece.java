@@ -3,10 +3,13 @@ import java.util.List;
 public class Piece implements Movable {
 
     protected Position position;
-    protected final Color color;
+    private final Color color;
     protected int score = 0;
-    protected String mark;
+    protected char mark;
 
+    public int getScore() {
+        return score;
+    }
 
     Piece(Position position, Color color) {
         this.position = position;
@@ -52,6 +55,10 @@ public class Piece implements Movable {
 
     public void move(Position position) {
         this.position = position;
+    }
+
+    public Color getColor() {
+        return color;
     }
 }
 

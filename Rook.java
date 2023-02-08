@@ -7,10 +7,10 @@ public class Rook extends Piece implements Movable {
         super(position, color);
         score = 5;
         if (color == Color.WHITE) {
-            mark =  "\u2656";
+            mark =  '\u2656';
         }
         if (color == Color.BLACK) {
-            mark =  "\u265C";
+            mark =  '\u265C';
         }
     }
 

@@ -7,9 +7,9 @@ public class Pawn extends Piece implements Movable {
         super(position, color);
         score = 1;
         if (color == Color.WHITE) {
-            mark = "\u2659";
+            mark = '\u2659';
         } else {
-            mark = "\u265F";
+            mark = '\u265F';
         }
     }
 

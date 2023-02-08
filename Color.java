@@ -1,3 +1,11 @@
 public enum Color {
-    BLACK, WHITE
+    BLACK, WHITE;
+
+    public Color getNextTurn() {
+        if (this.equals(BLACK)) {
+            return WHITE;
+        }
+        return BLACK;
+    }
+
 }

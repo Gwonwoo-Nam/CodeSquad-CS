@@ -20,7 +20,7 @@ public class OutputView {
         System.out.print(COMMAND_MESSAGE);
     }
 
-    public static void render(String[][] pieceMap) {
+    public static void render(char[][] pieceMap) {
         StringBuffer renderBuffer = new StringBuffer();
         renderBuffer.append("ABCDEFGH\n");
         for (int rank = 0; rank < pieceMap.length; rank++) {
@@ -39,6 +39,11 @@ public class OutputView {
             .reduce((str1, str2) -> str1 + "," + str2);
         position.ifPresentOrElse(value -> System.out.println(value), () -> System.out.println("없음"));
 
+    }
+
+    public static void showScore(int[] score) {
+        System.out.println("--- 점수 현황표 ---");
+        System.out.println("흑팀 : " + score[0] + " | 백팀 : " + score[1] + "\n");
     }
 
 

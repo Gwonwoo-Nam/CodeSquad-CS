@@ -1,46 +1,58 @@
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Controller {
+    private static Board board = new Board();
 
     public static void run() throws IOException {
         OutputView.bootProgram();
-        Board board = new Board();
 
-        initializeBoards(board);
+        initializeBoards();
 
         while (true) {
             OutputView.getCommand();
             try {
                 String command = InputView.readLine();
-                if (command.matches("^[?][A-H][1-8]$")) {
-                    List<Position> positions = board.getPossiblePositions(
-                        new Position(command.charAt(2) - '1', command.charAt(1) - 'A'));
-                    OutputView.printPossiblePositions(positions);
+
+                if (ControlMenu.POSSIBLE_LOCATION.choose(command)) {
+                    checkPossibleLocations(command);
+                    continue;
                 }
-                if (command.matches("^[A-H][1-8][A-H][1-8]$")) {
-                    List<String> pos = Arrays.stream(command.split(""))
-                        .filter(str -> !str.isEmpty()).collect(
-                            Collectors.toList());
-                    Position fromPos = new Position(pos.get(1).charAt(0) - '1',
-                        pos.get(0).charAt(0) - 'A');
-                    Position toPos = new Position(pos.get(3).charAt(0) -'1',
-                        pos.get(2).charAt(0)-'A');
-                    board.move(fromPos, toPos);
-                    OutputView.render(board.display());
+                if (ControlMenu.MOVE.choose(command)) {
+                    move(command);
+                    continue;
                 }
+                throw new IllegalArgumentException("[ERROR] 올바르지 않은 명령입니다.");
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
         }
 
-
     }
 
+    private static void move(String command) {
+        int fileFrom = command.charAt(0) - 'A';;
+        int rankFrom = command.charAt(1) - '1';
+        int fileTo = command.charAt(4) - 'A';
+        int rankTo = command.charAt(5) - '1';
+        Position fromPos = new Position(rankFrom, fileFrom);
+        Position toPos = new Position(rankTo, fileTo);
+        if (!board.move(fromPos, toPos)) {
+            throw new IllegalArgumentException("[ERROR] 이동할 수 없는 위치입니다.");
+        }
+        OutputView.showScore(board.calculateScore());
+        OutputView.render(board.display());
+    }
 
-    public static void initializeBoards(Board board) {
+    private static void checkPossibleLocations(String command) {
+        int fileFromCommand = command.charAt(1) - 'A';
+        int rankFromCommand = command.charAt(2) - '1';
+        List<Position> positions = board.getPossiblePositions(
+                new Position(rankFromCommand, fileFromCommand));
+        OutputView.printPossiblePositions(positions);
+    }
+
+    public static void initializeBoards() {
         board.initPiece(new Pawn(new Position(File.A, Rank.TWO), Color.BLACK));
         board.initPiece(new Pawn(new Position(File.B, Rank.TWO), Color.BLACK));
         board.initPiece(new Pawn(new Position(File.C, Rank.TWO), Color.BLACK));

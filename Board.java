@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Board {
 
     private List<Piece> pieceList = new ArrayList<>();
+    private Color turn = Color.BLACK; //흑말부터 시작
 
     public void initPiece(Piece piece) {
         if (!piece.isOnRightPosition()) {
@@ -28,8 +30,8 @@ public class Board {
     }
 
     public boolean hasMoreThanMax() {
-        int[] validCounts = new int[]{8, 8, 2, 2, 2, 2, 2, 2, 1, 1};
-        int[] countList = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        int[] validCounts = new int[] {8, 8, 2, 2, 2, 2, 2, 2, 1, 1};
+        int[] countList = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
         for (Piece piece : pieceList) {
             if (piece.isBlack() && piece instanceof Pawn) {
@@ -78,9 +80,13 @@ public class Board {
         Piece p = hasPlace(from);
 
         List<Position> positionList = new ArrayList<>();
+
         for (Position to : p.possiblePositions()) {
             if (hasPlace(to) != null && hasPlace(to).hasSameColor(p)) {
                 continue;
+            }
+            if (p instanceof Knight) {
+                addKnightsPosition(from, positionList, to);
             }
             if (from.getRankLocation() == to.getRankLocation()) {
                 if (!existHorizontalPlace(from, to)) {
@@ -93,7 +99,7 @@ public class Board {
                 }
             }
             if (Math.abs(from.getFileLocation() - to.getFileLocation()) ==
-                Math.abs(from.getRankLocation() - to.getRankLocation())) {
+                    Math.abs(from.getRankLocation() - to.getRankLocation())) {
                 if (!existDiagonalPlace(from, to)) {
                     positionList.add(to);
                 }
@@ -102,12 +108,39 @@ public class Board {
         return positionList;
     }
 
+    private void addKnightsPosition(Position from, List<Position> positionList, Position to) {
+        if (to.getFileLocation() - from.getFileLocation() == 2) {
+            Position frontPos = new Position(from.getRankLocation(), from.getFileLocation() + 1);
+            if (hasPlace(frontPos) == null) {
+                positionList.add(to);
+            }
+        }
+        if (to.getRankLocation() - from.getRankLocation() == 2) {
+            Position frontPos = new Position(from.getRankLocation() + 1, from.getFileLocation());
+            if (hasPlace(frontPos) == null) {
+                positionList.add(to);
+            }
+        }
+        if (to.getFileLocation() - from.getFileLocation() == -2) {
+            Position frontPos = new Position(from.getRankLocation(), from.getFileLocation() - 1);
+            if (hasPlace(frontPos) == null) {
+                positionList.add(to);
+            }
+        }
+        if (to.getRankLocation() - from.getRankLocation() == -2) {
+            Position frontPos = new Position(from.getRankLocation() - 1, from.getFileLocation());
+            if (hasPlace(frontPos) == null) {
+                positionList.add(to);
+            }
+        }
+    }
+
     private boolean existHorizontalPlace(Position from, Position to) {
         int fromLoc = from.getFileLocation();
         int toLoc = to.getFileLocation();
         while (fromLoc != toLoc) {
             if (fromLoc != toLoc && fromLoc != from.getFileLocation()
-                && hasPlace(new Position(from.getRankLocation(), fromLoc)) != null) {
+                    && hasPlace(new Position(from.getRankLocation(), fromLoc)) != null) {
                 return true;
             }
             if (fromLoc < toLoc) {
@@ -125,7 +158,7 @@ public class Board {
         int toLoc = to.getRankLocation();
         while (fromLoc != toLoc) {
             if (fromLoc != toLoc && fromLoc != from.getRankLocation()
-                && hasPlace(new Position(fromLoc, from.getFileLocation())) != null) {
+                    && hasPlace(new Position(fromLoc, from.getFileLocation())) != null) {
                 return true;
             }
             if (fromLoc < toLoc) {
@@ -146,8 +179,8 @@ public class Board {
         int toFile = to.getFileLocation();
         while (fromRank != toRank && fromFile != toFile) {
             if (fromRank != toRank && fromRank != from.getRankLocation() &&
-                hasPlace(new Position(fromRank, fromFile)) != null) {
-                return false;
+                    hasPlace(new Position(fromRank, fromFile)) != null) {
+                return true;
             }
             if (fromRank < toRank) {
                 fromRank++;
@@ -168,25 +201,34 @@ public class Board {
                 }
             }
         }
-        return true;
+        return false;
     }
 
-    public int calculateScore() {
-
-        return 0;
+    public int[] calculateScore() {
+        int sumBlack = 0;
+        int sumWhite = 0;
+        for (Piece p : pieceList) {
+            if (p.getColor() == Color.BLACK) {
+                sumBlack += p.getScore();
+            }
+            if (p.getColor() == Color.WHITE) {
+                sumWhite += p.getScore();
+            }
+        }
+        return new int[] {sumBlack, sumWhite};
     }
 
-    public String[][] display() {
-        String[][] pieceMap = new String[8][8];
+    public char[][] display() {
+        char[][] pieceMap = new char[8][8];
 
         for (int rank = 0; rank < pieceMap.length; rank++) {
             for (int file = 0; file < pieceMap.length; file++) {
-                pieceMap[rank][file] = ".";
+                pieceMap[rank][file] = '.';
             }
         }
         for (Piece piece : pieceList) {
             pieceMap[piece.getPosition().getRankLocation()][piece.getPosition()
-                .getFileLocation()] = piece.mark;
+                    .getFileLocation()] = piece.mark;
         }
 
         return pieceMap;
@@ -202,12 +244,38 @@ public class Board {
     public boolean move(Position from, Position to) {
         for (Position pos : getPossiblePositions(from)) {
             if (pos.equals(to)) {
-                hasPlace(from).move(to);
+                Piece piece = hasPlace(from);
+                if (!piece.getColor().equals(turn)) {
+                    throw new IllegalArgumentException("[ERROR] 현재 차례가 아닙니다.");
+                }
+                if (piece instanceof Pawn) {
+                    promotePawn(piece,to);
+                }
+                catchOpponent(to);
+                piece.move(to);
+                turn = piece.getColor().getNextTurn();
                 return true;
             }
         }
-
         return false;
+    }
+
+    private void catchOpponent(Position to) {
+        Optional<Piece> opponent = Optional.ofNullable(hasPlace(to));
+        opponent.ifPresent(
+                piece -> {
+                    if (piece.getColor().equals(turn.getNextTurn())) {
+                        pieceList.remove(piece);
+                    }
+                }
+        );
+    }
+
+    private void promotePawn(Piece piece, Position to) {
+        if (to.isInPromotionArea()) {
+            pieceList.add(new Queen(new Position(to), piece.getColor()));
+            pieceList.remove(piece);
+        }
     }
 
 }
