@@ -18,6 +18,10 @@ public class OrderQueue {
         return orderQueue.poll();
     }
 
+    public CoffeeMenu peek() {
+        return orderQueue.peek();
+    }
+
     public boolean isEmpty() {
         return orderQueue.isEmpty();
     }

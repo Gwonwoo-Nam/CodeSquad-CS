@@ -1,61 +1,32 @@
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import static java.lang.System.*;
+
+import java.util.concurrent.ForkJoinPool;
 
 public class Controller {
+    private static OrderQueue orderQueue = new OrderQueue();
 
+    private static Manager manager = new Manager(orderQueue);
+
+    private static Cashier cashier = new Cashier(orderQueue);
     public static void run() {
-        OrderQueue orderQueue = new OrderQueue();
-
-        Manager manager = new Manager(orderQueue);
-
-        Cashier cashier = new Cashier(orderQueue);
         cashier.takeOrder();
-        manager.checkOrder();
+        manager.work();
 
+        finishEventLoop();
+    }
+
+    private static void finishEventLoop() {
         while (true) {
-            if (timeOut(orderQueue)) {
-                return;
+            if (manager.orderedList.contains(true)) {
+                ForkJoinPool.commonPool().shutdown();
+                break ;
             }
         }
-    }
-
-    private static void sleep(long time) {
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static boolean timeOut(OrderQueue orderQueue) {
-        ExecutorService es = Executors.newFixedThreadPool(1);
-        CompletableFuture.supplyAsync(() -> {
-                    if (Barista.done() && orderQueue.isEmpty()) {
-                        System.out.println("true");
-                        sleep(5000);
-                        return true;
-                    }
-                    System.out.println("false");
-                    return false;
-                }, es).thenApply(s -> {
-                    finish(orderQueue);
-                    return false;
-                }).orTimeout(3, TimeUnit.SECONDS)
-                .exceptionally(e -> {
-                    if (e instanceof TimeoutException) {
-                        return true;
-                    }
-                    finish(orderQueue);
-                    return false;
-                });
-        return false;
+        exit(0);
     }
 
     public static void main(String[] args) {
         run();
-
     }
 }
+
