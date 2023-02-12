@@ -27,12 +27,10 @@ public class CpuScheduler {
         while (true) {
             // waiting Queue에 모든 프로세스를 줄세운다.
             queueWaiting();
-
             // 모든 프로세스가 실행 완료되었는지 검사한다.
             if (waitingQueue.isEmpty()) {
                 break;
             }
-
             //우선 순위 대기의 첫 번째 원소를 뽑는다.
             Process waitingProcess = waitingQueue.poll();
             //최근에 실행한 프로세스인데, 대기 큐에 다른 프로세스가 있을 때, 다른 프로세스를 먼저 실행
@@ -44,7 +42,6 @@ public class CpuScheduler {
             //준비 큐에 집어넣기
             readyQueue.add(waitingProcess);
             Process currentProcess = readyQueue.poll();
-
             //프로세스를 실행한다.
             if (threadOption.equals(ThreadOption.SINGLE_THREAD)) {
                 currentProcess.execute();
@@ -56,9 +53,7 @@ public class CpuScheduler {
             doWait();
             //프로세스 상태를 출력한다.
             display();
-
             currentProcess.terminateOrWait();
-
             //실행된 프로세스가 종료되지 않았으면 다시 대기 큐에 추가한다.
             if (!currentProcess.isTerminated()) {
                 waitingQueue.add(currentProcess);
@@ -68,7 +63,6 @@ public class CpuScheduler {
         }
         display();
         showStatistics();
-
     }
 
     private void initThreads() {

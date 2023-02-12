@@ -225,6 +225,54 @@
 - 협력형 스레드 스케줄러는 실행 중 스레드가 CPU 사용권을 다른 스레드에게 넘길 때까지 대기
 - JVM은 우선순위에 따른 선점형 스레드 스케줄링 방식 사용
 
+### IPC(InterProcess Communication)
+
+#### 프로세스 간 통신 vs 스레드 간 통신
+프로세스 - fork system call로 생성, PC를 포함해서 메모리 공간을 복사하여 별도 자원 할당
+스레드 - pthread_create 함수 생성, 메모리 공간과 자원을 스레드끼리 공유
+
+따라서 프로세스는 통신 공간이 없어서 통신을 위한 별도의 공간을 만들어야하기 때문에 스레드 간 통신이 더 어렵다.
+
+
+
+1. PIPE
+프로세스는 메모리 공간을 복제하기 때문에, 통신을 하기 위해 별도의 메모리 공간 할당이 필요.
+통신을 위한 메모리공간(버퍼)를 생성해서 프로세스가 데이터를 주고 받는 것이 가능하게 되었습니다.
+PIPE는 단방향의 통신이라는 단점이 존재합니다.
+2개의 프로세스가 통신을 할 때는 2개의 파이프를 이용해서 양방향 통신을 한다.
+단점 : 프로세스의 개수가 많은 경우 모든 경우의 수에 대해 서로를 이어주는 파이프가 존재해야하므로 버퍼 공간의 낭비가 심하다.
+
+파이프의 종류
+- 익명파이프(Anonymous Pipe)
+이름이 없기 때문에 외부 프로세스에서 파이프를 사용할 수 없다. 부모 프로세스가 자식 프로세스를 생성하는 경우에는
+파일 지정 번호를 상속받아 익명파이프로 통신할 수 있다.(부모 -> 자식만 가능한듯, 단방향 방식)
+- 네임드파이프(Named Pipe)
+부모 자식간 통신만 가능하므로, 외부 프로세스와 통신을 위한 이름이 있는 파이프.
+파이프에 이름과 권한을 부여하여 생성한다. 읽기 쓰기가 모두 가능하지만 방향이 지정된 반이중통신.
+
+2. Unix Domain Socket
+소켓을 만들어 통신하는 방법. 소켓 통신은 흔히 네트워크 통신 기법으로 많이 사용되는데, 데이터 교환을 위해 양쪽 PC에서 임의 포트를 정하고 해당 포트 간 대화를 통해 데이터를 주고받는 방식.
+각각 PC의 PORT를 담당하는 소켓은 각각 하나의 프로세스이다. 프로세스는 PORT를 맡아 데이터 송수신 역할을 진행하는 프로세스가 되는 것.
+
+
+3. Shared Memory(공유 메모리)
+메모리의 특정 공간을 활용해서 프로세스 간 통신이 진행되는 방식
+- 대량의 정보를 다수 프로세스에게 배포 가능하다.
+- 공유 메모리 공간에 대한 접근 제어가 필요하다.
+- 프로세스가 공유 메모리 할당을 커널에 요청하면 커널은 메모리 공간을 할당하고, 이후 어떤 프로세스건 해당 메모리 영역 접근 가능하다.
+- 중개자 없이 직접 메모리 접근이 가능하여 IPC 중 가장 빠른 작동이 가능
+
+4. Memory Map
+파일이 오픈되면 해당 파일의 데이터가 메모리에 올라가게 됩니다. 그리고 해당 메모리에 접근을 통해 데이터를 읽고 쓸 수 있습니다. 
+메모리 공간에 오픈된 파일을 프로세스 메모리 공간으로 가져와서 읽고 쓴다.
+이 경우, 파일을 쓸 때마다 시스템 콜을 할 필요가 없어진다.
+기존의 메모리 공간에 같이 접근해서 데이터를 읽고 쓰는 작업을 진행하는데 이러한 방법을 Memory MAP이라고 할 수 있습니다.
+
+5. Message Queue
+우편함과 같은 방식, 통신하는 프로세스는 메시지 함을 만들어 해당 메시지 함으로 데이터를 전송, 메시지함에서 메시지를 수신하는 방식
+
+메시지 큐 방식은 메시지를 구분하기 위해 메시지에 태그를 달아 메시지를 구분한다.
+송신 함수를 통해 메시지 큐로 송신, 수신 함수를 통해 메시지 큐에서 메모리 공간으로 수신.
 ### 미션 1 - 프로세스 스케줄링 시각화
 
 #### 기능 요구 사항
@@ -250,3 +298,120 @@
   - deadline까지 남은 시간을 기반으로하는 선점형 우선순위 스케줄링 방식
   - 우선순위 : (deadline - 현재 시각)을 오름차순 정렬
 
+### 싱글 스레드 구현 결과
+```
+D(READY), 0 / 6sec , waiting 0 , remaining Time 20 sec
+A(READY), 0 / 3sec , waiting 0 , remaining Time 10 sec
+B(READY), 0 / 4sec , waiting 0 , remaining Time 15 sec
+.
+D(WAITING), 0 / 6sec , waiting 1 , remaining Time 19 sec
+A(RUNNING), 1 / 3sec , waiting 0 , remaining Time 9 sec
+B(WAITING), 0 / 4sec , waiting 1 , remaining Time 14 sec
+.
+D(WAITING), 0 / 6sec , waiting 2 , remaining Time 18 sec
+A(WAITING), 1 / 3sec , waiting 1 , remaining Time 8 sec
+B(RUNNING), 1 / 4sec , waiting 1 , remaining Time 13 sec
+.
+D(WAITING), 0 / 6sec , waiting 3 , remaining Time 17 sec
+A(RUNNING), 2 / 3sec , waiting 1 , remaining Time 7 sec
+B(WAITING), 1 / 4sec , waiting 2 , remaining Time 12 sec
+.
+D(WAITING), 0 / 6sec , waiting 4 , remaining Time 16 sec
+A(WAITING), 2 / 3sec , waiting 2 , remaining Time 6 sec
+B(RUNNING), 2 / 4sec , waiting 2 , remaining Time 11 sec
+.
+D(WAITING), 0 / 6sec , waiting 5 , remaining Time 15 sec
+A(RUNNING), 3 / 3sec , waiting 2 , remaining Time 5 sec
+B(WAITING), 2 / 4sec , waiting 3 , remaining Time 10 sec
+.
+D(WAITING), 0 / 6sec , waiting 6 , remaining Time 14 sec
+A(TERMINATED), 3 / 3sec , waiting 2
+B(RUNNING), 3 / 4sec , waiting 3 , remaining Time 9 sec
+.
+D(RUNNING), 1 / 6sec , waiting 6 , remaining Time 13 sec
+A(TERMINATED), 3 / 3sec , waiting 2
+B(WAITING), 3 / 4sec , waiting 4 , remaining Time 8 sec
+.
+D(WAITING), 1 / 6sec , waiting 7 , remaining Time 12 sec
+A(TERMINATED), 3 / 3sec , waiting 2
+B(RUNNING), 4 / 4sec , waiting 4 , remaining Time 7 sec
+.
+D(RUNNING), 2 / 6sec , waiting 7 , remaining Time 11 sec
+A(TERMINATED), 3 / 3sec , waiting 2
+B(TERMINATED), 4 / 4sec , waiting 4
+.
+D(RUNNING), 3 / 6sec , waiting 7 , remaining Time 10 sec
+A(TERMINATED), 3 / 3sec , waiting 2
+B(TERMINATED), 4 / 4sec , waiting 4
+.
+D(RUNNING), 4 / 6sec , waiting 7 , remaining Time 9 sec
+A(TERMINATED), 3 / 3sec , waiting 2
+B(TERMINATED), 4 / 4sec , waiting 4
+.
+D(RUNNING), 5 / 6sec , waiting 7 , remaining Time 8 sec
+A(TERMINATED), 3 / 3sec , waiting 2
+B(TERMINATED), 4 / 4sec , waiting 4
+.
+D(RUNNING), 6 / 6sec , waiting 7 , remaining Time 7 sec
+A(TERMINATED), 3 / 3sec , waiting 2
+B(TERMINATED), 4 / 4sec , waiting 4
+.
+D(TERMINATED), 6 / 6sec , waiting 7
+A(TERMINATED), 3 / 3sec , waiting 2
+B(TERMINATED), 4 / 4sec , waiting 4
+.
+기한부 스케줄링 (deadline scheduling)이 종료되었습니다.
+평균 대기시간 = (7 + 2 + 4) / 3 = 4.33sec
+평균 반환시간 = (13 + 5 + 8) / 3 = 8.67sec
+```
+
+### 미션 2 - 스레드 스케줄링
+
+### 기능 요구사항
+- [O] 각 프로세스는 스레드를 만들 수 있고, 스레드가 있으면 스레드마다 병렬로 처리할 수 있으니 실행 시간을 단축하는 효과가 있다고 가정한다. 스레드 2개가 1초 동작하면, 스레드 1개가 2초 동작한 것보다 단축된다.
+- [O] 프로그램을 시작할 때 프로세스 별로 최대 작업 시간을 2로 나눴을 때 (소숫점을 버린) 몫만큼 스레드를 생성한다.
+- [O] 프로그램이 시작하면 랜덤으로 프로세스 3개를 생성하고, 스레드 개수도 표시한다.
+- [O] 프로그램은 모든 프로세스 작업이 끝나면 종료한다.
+
+### 프로그래밍 요구사항
+- [O] 각자 언어와 환경에서 스레드를 생성하고 각 스레드는 1초후에 동작을 완료한다.
+- [O] 특정 프로세스는 할당된 스레드가 모두 동작을 완료해야 해당 프로세스는 동작을 멈춘다.
+
+### 멀티스레드 구현 결과
+```
+이 프로그램은
+프로세스D(6초) - 스레드 3개
+프로세스B(4초) - 스레드 2개
+프로세스C(5초) - 스레드 2개
+총 스레드는 7개입니다.
+
+D(READY), 0 / 6sec , waiting 0 , remaining Time 20 sec
+B(READY), 0 / 4sec , waiting 0 , remaining Time 15 sec
+C(READY), 0 / 5sec , waiting 0 , remaining Time 15 sec
+.
+D(WAITING), 0 / 6sec , waiting 1 , remaining Time 19 sec
+B(RUNNING), 4 / 4sec , waiting 0 , remaining Time 14 sec
+C(WAITING), 0 / 5sec , waiting 1 , remaining Time 14 sec
+.
+D(WAITING), 0 / 6sec , waiting 2 , remaining Time 18 sec
+B(TERMINATED), 4 / 4sec , waiting 0
+C(RUNNING), 4 / 5sec , waiting 1 , remaining Time 13 sec
+.
+D(RUNNING), 6 / 6sec , waiting 2 , remaining Time 17 sec
+B(TERMINATED), 4 / 4sec , waiting 0
+C(WAITING), 4 / 5sec , waiting 2 , remaining Time 12 sec
+.
+D(TERMINATED), 6 / 6sec , waiting 2
+B(TERMINATED), 4 / 4sec , waiting 0
+C(RUNNING), 5 / 5sec , waiting 2 , remaining Time 11 sec
+.
+D(TERMINATED), 6 / 6sec , waiting 2
+B(TERMINATED), 4 / 4sec , waiting 0
+C(TERMINATED), 5 / 5sec , waiting 2
+.
+기한부 스케줄링 (deadline scheduling)이 종료되었습니다.
+평균 대기시간 = (2 + 0 + 2) / 3 = 1.33sec
+평균 반환시간 = (8 + 4 + 7) / 3 = 6.33sec
+
+---
+```

@@ -33,8 +33,6 @@ public class PCB {
         currentTime++;
     }
 
-
-
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -59,17 +57,11 @@ public class PCB {
         return executionTime;
     }
 
-
-
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        sb.append(processId);
-        sb.append("(");
-        sb.append(status);
-        sb.append("), ");
-        sb.append(executionTime);
-        sb.append(" / ");
+        sb.append(processId).append("(").append(status);
+        sb.append("), ").append(executionTime).append(" / ");
         sb.append(runningTime);
         sb.append("sec , waiting ");
         sb.append(waitingTime);

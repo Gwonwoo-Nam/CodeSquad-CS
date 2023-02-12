@@ -7,11 +7,11 @@ public class ProcessApplication {
         List<Process> processList = new ArrayList<>();
 
         processList.add(new Process("A",3,10));
-        processList.add(new Process("B",5, 15));
-        processList.add(new Process("C",7, 20));
-        processList.add(new Process("D",10, 40));
-        processList.add(new Process("E",15, 70));
-        processList.add(new Process("F",21,80));
+        processList.add(new Process("B",4, 15));
+        processList.add(new Process("C",5, 15));
+        processList.add(new Process("D",6, 20));
+        processList.add(new Process("E",7, 20));
+        processList.add(new Process("F",8,25));
 
         return processList;
     }
