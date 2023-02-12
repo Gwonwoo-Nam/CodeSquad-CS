@@ -198,5 +198,60 @@ Stack 구현하기
 - [O] 분해된 토큰의 의미를 분석한다.
 - [O] 의미와 구조를 반영해 트리 구조의 파스 트리(DOM)로 생성한다.
   - [O] 태그가 적절하지 않으면 에러를 출력한다.
-- [X] Stack 동작을 구현한다.(1차적으로는 Stack을 구현하지 않는다.)
 - [O] 출력양식에 맞추어 문자열로 반환한다.
+- DOM 구조를 생성했으면, DOM 구조를 탐색해서 찾아내는 메소드를 구현할 수 있다
+1. elementByAttribute 요구사항
+- 태그의 속성과 값을 비교해서 해당 요소를 찾는 함수를 구현한다.
+2. elementByTag 요구사항
+- 태그로 모든 해당 요소를 찾아 배열로 리턴하는 함수를 구현한다.
+
+### 구현 결과
+
+Tokenizer 구현 결과
+```
+<!DOCTYPE html>
+<HTML lang="ko">
+  <BODY>
+    <P>PORO
+	  <IMG SRC="porolog.tistory.com"></IMG>
+	  <BR/>
+	</P>
+  </BODY>
+</HTML>
+
+<![<, !, DOCTYPE, html, >, <, HTML, lang, =, ko, >, <, BODY, >, <, P, >, PORO, <, IMG, SRC, =, porolog.tistory.com, >, <, /IMG, >, <, BR/, >, <, /P, >, <, /BODY, >, <, /HTML, >]>
+```
+
+
+Parser 구현
+```
+{ 
+element: 'HTML',
+attributes: [
+	{
+	name : lang, value : "ko"
+	}
+]
+children : [
+	{ 
+	element: 'BODY',
+	children : [
+		{ 
+		element: 'P',
+		text : 'PORO' ,
+		children : [
+			{ 
+			element: 'IMG',
+			attributes: [
+				{
+				name : SRC, value : "porolog.tistory.com"
+				}
+			]
+            element: 'BR'
+			]
+		}
+		]
+	}
+	]
+}
+```
