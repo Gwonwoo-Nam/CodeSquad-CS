@@ -171,3 +171,48 @@ public class PredicateTest {
 ### FlatMap
 - 중복된 스트림을 1차원으로 평면화시키는 메서드
 - 리스트를 하나의 스트림처럼 다룰 수 있다.
+
+### 기능 요구사항
+- [O] 각 언어로 만들어진 다음 2개 클래스에서 중복된 코드를 줄이고, 함수형 표현으로 최대한 개선한다.
+- [O] 앞서 작성한 자연수 분류 ClassifierAlpha, PrimeAlpha 를 이용해서 2-100까지 자연수 중에서 완전수(perfect), 과잉수(Abundant), 부족수(Deficient), 소수(Prime), 정사각수(Squared) 목록을 출력한다.
+
+### 프로그래밍 요구사항
+- [O] map, filter, reduce 고차 함수를 활용한다.
+- [O] 출력을 위해서는 반드시 클로저(또는 람다)를 선언하고 반복문 대신 reduce를 활용해서 출력해야 한다.
+- [O] 자연수 중에서 다른 자연수의 제곱으로 표현되는 정사각수(squared) 판단 함수를 추가한다
+
+### 구현 결과
+```
+2 : deficient, prime
+3 : deficient, prime
+4 : deficient, squared
+5 : deficient, prime
+6 : perfect,
+7 : deficient, prime
+8 : deficient,
+9 : deficient, squared
+10 : deficient,
+11 : deficient, prime
+12 : abundant,
+13 : deficient, prime
+14 : deficient,
+15 : deficient,
+16 : deficient, squared
+17 : deficient, prime
+18 : abundant,
+19 : deficient, prime
+...
+88 : abundant,
+89 : deficient, prime
+90 : abundant,
+91 : deficient,
+92 : deficient,
+93 : deficient,
+94 : deficient,
+95 : deficient,
+96 : abundant,
+97 : deficient, prime
+98 : deficient,
+99 : deficient,
+100 : abundant, squared
+```
