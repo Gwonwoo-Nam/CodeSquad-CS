@@ -1,4 +1,4 @@
-함수형 프로그래밍
+## 함수형 프로그래밍
 
 ### 재귀 호출
 
@@ -117,33 +117,73 @@ bind operator가 있어야 한다.
 ## 함수형 코드로 구현하기
 
 1. SquadSet
-- 불변 타입으로 초기화할 때만 배열로 값을 넘길 수 있다. 추가나 삭제는 되지 않는다.
-- 수학에서 집합 개념을 지원하여, 요소가 중복되서는 안된다.
-- sum(other) : SquadSet에 다른other SquadSet 요소들을 더해서 합집합을 리턴한다. 이미 같은 값이 있으면 추가하지 않는다.
-- complement(other) : SquadSet에서 다른other SquadSet 요소를 빼서 차집합을 리턴한다. 값이 포함되어 있지 않으면 아무런 변화도 없다.
-- intersect(other) : SquadSet와 다른other SquadSet 값과 비교해서, 두 집합에 모두 있는 원소 - 교집합을 리턴한다.
-- resultAll() : 모든 요소를 1차원 배열로 리턴한다.
+- [O] 불변 타입으로 초기화할 때만 배열로 값을 넘길 수 있다. 추가나 삭제는 되지 않는다.
+- [O] 수학에서 집합 개념을 지원하여, 요소가 중복되서는 안된다.
+- [O] sum(other) : SquadSet에 다른other SquadSet 요소들을 더해서 합집합을 리턴한다. 이미 같은 값이 있으면 추가하지 않는다.
+- [O] complement(other) : SquadSet에서 다른other SquadSet 요소를 빼서 차집합을 리턴한다. 값이 포함되어 있지 않으면 아무런 변화도 없다.
+- [O] intersect(other) : SquadSet와 다른other SquadSet 값과 비교해서, 두 집합에 모두 있는 원소 - 교집합을 리턴한다.
+- [O] resultAll() : 모든 요소를 1차원 배열로 리턴한다.
 
 2. CountSet
-- [ ] 불변 타입으로 초기화할 때 Object 또는 HashMap으로 값을 넘길 수 있다.
-- [ ] 새로운 요소를 추가하거나 삭제하면 새로운 CountSet를 리턴한다.
-- [ ] SquadSet과 달리 요소가 중복해서 있을 수 있고, 요소별 Count 값을 가지고 있다.
-- [ ] append(element) : 새로운 요소를 추가하고 새로운 CountSet을 리턴한다. 이미 있는 경우는 Count만 증가하고 리턴한다.
-- [ ] remove(element) : 기존에 요소가 있으면 Count를 줄인다. 만약 0이되면 제거한 CountSet을 리턴한다.
+- [O] 불변 타입으로 초기화할 때 Object 또는 HashMap으로 값을 넘길 수 있다.
+- [O] 새로운 요소를 추가하거나 삭제하면 새로운 CountSet를 리턴한다.
+- [O] SquadSet과 달리 요소가 중복해서 있을 수 있고, 요소별 Count 값을 가지고 있다.
+- [O] append(element) : 새로운 요소를 추가하고 새로운 CountSet을 리턴한다. 이미 있는 경우는 Count만 증가하고 리턴한다.
+- [O] remove(element) : 기존에 요소가 있으면 Count를 줄인다. 만약 0이되면 제거한 CountSet을 리턴한다.
   - 요소가 없는 경우
   - 요소가 있는데 Count가 1 : filter
   - 요소가 있는데 Count가 2 이상
-- [ ] countFor(element) : 특정 요소에 대한 Count 값을 리턴한다.
-- [ ] sum(other) : CountSet에 다른other CountSet 요소들을 더해서 합집합을 리턴한다. 이미 같은 값이 있으면 합쳐서 카운트를 올린다.
-- [ ] complement(other) : CountSet에서 다른other CountSet 요소를 빼서 차집합을 리턴한다. 값이 포함되어 있지 않으면 아무런 변화도 없다. 만약 현재 CountSet보다 빼려는 other CountSet 요소 Count가 더 큰 경우는 제거한다. (Count는 마이너스가 되지 않고 0보다 같거나 작으면 제거한다.)
-- [ ] intersect(other) : Set와 다른other CountSet 값과 비교해서, 두 집합에 모두 있는 원소 - 교집합을 리턴한다. 교집합 Count는 모두 1로 리턴한다.
-- [ ] resultAll() : 모든 요소와 Count를 Object 형태로 리턴한다.
+- [O] countFor(element) : 특정 요소에 대한 Count 값을 리턴한다.
+- [O] sum(other) : CountSet에 다른other CountSet 요소들을 더해서 합집합을 리턴한다. 이미 같은 값이 있으면 합쳐서 카운트를 올린다.
+- [O] complement(other) : CountSet에서 다른other CountSet 요소를 빼서 차집합을 리턴한다. 값이 포함되어 있지 않으면 아무런 변화도 없다. 만약 현재 CountSet보다 빼려는 other CountSet 요소 Count가 더 큰 경우는 제거한다. (Count는 마이너스가 되지 않고 0보다 같거나 작으면 제거한다.)
+- [O] intersect(other) : Set와 다른other CountSet 값과 비교해서, 두 집합에 모두 있는 원소 - 교집합을 리턴한다. 교집합 Count는 모두 1로 리턴한다.
+- [O] resultAll() : 모든 요소와 Count를 Object 형태로 리턴한다.
 
 ### 프로그래밍 요구사항
-- [ ] 합을 구현할 때 Array 혹은 List 배열만 사용하며, Object, HashMap이나 기존에 구현된 Set, HashSet 등 라이브러리는 사용할 수 없다.
-- [ ] 핵심 로직 대신 입력이나 출력용으로 Object나 Map 구조로 값을 전달하는 것은 가능하다.
-- [ ] 반드시 O(1) 시간복잡도를 지원하지 않아도 되지만, 성능에 대해서 최선의 방식을 스스로 정한다.
-- [ ] 지원하는 타입은 정수형 또는 문자열을 기준으로 스스로 정한다.
-- [ ] 구현한 함수 기능을 모두 확인할 수 있는 동작 확인용 프로그램을 별도로 작성한다.
-- [ ] 각 클래스는 불변 클래스로 내부 속성을 바꾸지 않고, 변경될 경우는 새로운 집합을 리턴한다.
+- [O] 합을 구현할 때 Array 혹은 List 배열만 사용하며, Object, HashMap이나 기존에 구현된 Set, HashSet 등 라이브러리는 사용할 수 없다.
+- [O] 핵심 로직 대신 입력이나 출력용으로 Object나 Map 구조로 값을 전달하는 것은 가능하다.
+- [O] 반드시 O(1) 시간복잡도를 지원하지 않아도 되지만, 성능에 대해서 최선의 방식을 스스로 정한다.
+- [O] 지원하는 타입은 정수형 또는 문자열을 기준으로 스스로 정한다.
+- [O] 구현한 함수 기능을 모두 확인할 수 있는 동작 확인용 프로그램을 별도로 작성한다.
+- [O] 각 클래스는 불변 클래스로 내부 속성을 바꾸지 않고, 변경될 경우는 새로운 집합을 리턴한다.
 
+```
+
+SquadSet
+---------------------
+제곱 , 짝수 인덱스, 스트링 변환 고차함수 실행
+4, 16, 36, 64
+교집합
+[2]
+차집합 
+[1, 3]
+합집합
+[1, 2, 3]
+원소 출력
+1
+2
+3
+
+CountSet
+------------------
+제곱 출력
+1 : 2 , 4 : 2 , 9 : 2
+짝수 출력
+2 : 2
+단독 출력
+1 : 2 , 2 : 2 , 3 : 2
+append
+1 : 2 , 2 : 2 , 3 : 3
+1 : 2 , 2 : 2 , 3 : 2 , 4 : 1
+remove
+3 : 3
+1 : 1 , 3 : 2
+COUNT 3
+A 합집합 B
+1 : 3 , 2 : 2 , 3 : 5
+A 차집합 B
+1 : 1 , 2 : 2
+A 교집합 B
+1 : 1 , 3 : 1
+
+```
