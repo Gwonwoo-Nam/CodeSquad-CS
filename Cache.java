@@ -6,7 +6,7 @@ public class Cache {
      * LFU 알고리즘 - 참조 횟수가 가장 적은 것부터 poll
      */
     private static PriorityQueue<Response> cacheQueue = new PriorityQueue();
-    private static int maxCapacity = 30;
+    private static int maxCapacity = 100;
 
     public static int getCacheSize() {
         return cacheQueue.size();
