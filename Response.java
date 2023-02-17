@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Response {
 
@@ -12,9 +10,9 @@ public class Response {
     private int contentLength;
     private List<String> headers = new ArrayList<>();
     private BufferedReader bufferedReader;
-    private String body = "";
+    private StringBuilder body = new StringBuilder();
 
-    public Response(InputStream inputStream, BufferedReader bufferedReader) {
+    public Response(BufferedReader bufferedReader) {
         this.bufferedReader = bufferedReader;
     }
 
@@ -23,16 +21,10 @@ public class Response {
         parseResponseLine();
         parseHeaders();
 
-        if (contentLength <= 0) {
+        if (contentLength > 0) {
             bufferSize = contentLength;
         }
         parseBody(bufferSize);
-
-        try {
-            TimeUnit.SECONDS.sleep(3);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private void parseResponseLine() throws IOException {
@@ -61,8 +53,7 @@ public class Response {
             String body = new String(buffer, 0, byteRead);
             sb.append(body);
         }
-
-        body += sb.toString();
+        body.append(sb);
     }
 
     @Override

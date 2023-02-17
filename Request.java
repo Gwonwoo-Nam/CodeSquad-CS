@@ -37,7 +37,6 @@ public class Request {
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            sb.append("> HTTP 요청 메시지\n");
             for (Entry<String, String> e : headers.entrySet()) {
                 sb.append(e.getKey() + ": " + e.getValue() + "\r\n");
             }
@@ -64,8 +63,7 @@ public class Request {
 
         //헤더
         Header header = new Header(uri);
-        header.addHeader("Accept-Language", "en");
-        header.addHeader("Accept-Encoding","identity");
+        //header.addHeader("Accept-Language", "en");
         //header.addHeader("Accept-Encoding","identity");
         sb.append(header);
         return sb.toString();

@@ -88,7 +88,7 @@ IP는 데이터의 배달을 처리하는 프로토콜, TCP는 패킷을 추적 
 
 ```
  0                   1                   2                   3   
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |          Source Port          |       Destination Port        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -96,9 +96,9 @@ IP는 데이터의 배달을 처리하는 프로토콜, TCP는 패킷을 추적 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                    Acknowledgment Number                      |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Data |           |C|E|U|A|P|R|S|F|                           |
-| Offset|  Reserved |W|C|R|C|S|S|Y|I|            Window         |
-|       |           |R|E|G|K|H|T|N|N|                           |
+|  Data |         |E|U|A|P|R|S|F|                               |
+| Offset|Reserved |C|R|C|S|S|Y|I|            Window             |
+|       |         |E|G|K|H|T|N|N|                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |           Checksum            |         Urgent Pointer        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -205,15 +205,6 @@ QUIC은 Google의 서비스에서 널리 사용되며, 현재는 HTTP/3 프로�
 HTTP는 소켓 통신의 일부이다. 소켓은 IP와 Port 번호를 이용해 만들어진 통신의 양 끝단을 의미하는데, IP와 Port 번호를 활용하는 TCP 레이어 위에 올라간 HTTP도 같은 방식으로 구현된다.
 HTTP는 내부구현으로는 소켓을 이용하지만 한쪽에서만 요청에 대한 응답을 하는 프로토콜로 구분되기 때문에 별도의 프로토콜로 구분된다. 
 
-### Content-Length
-
-HTTP에서 Content-Length 헤더가 누락된 경우, 클라이언트는 응답 본문의 길이를 정확히 알 수 없으므로 본문의 길이를 예측하기가 어렵습니다. 이 경우 클라이언트는 응답 본문의 끝을 감지할 수 있는 기준을 찾아내야 합니다.
-
-일반적으로 클라이언트는 소켓 버퍼를 사용하여 서버에서 전송되는 응답을 저장하고 처리합니다. 소켓 버퍼의 크기는 클라이언트와 서버 간의 네트워크 대역폭과 지연 시간에 따라 달라집니다. 일반적으로 더 높은 대역폭과 낮은 지연 시간으로 인해 소켓 버퍼를 더 크게 할 수 있습니다.
-
-그러나 Content-Length 헤더가 누락된 경우, 클라이언트는 소켓 버퍼 크기를 예측할 수 없으므로 버퍼 크기를 동적으로 조정해야 합니다. 클라이언트는 응답을 읽어 나가면서 데이터의 크기를 계속 추적합니다. 데이터를 계속 읽어나가면서 버퍼가 가득 차면, 클라이언트는 더 큰 버퍼를 할당하고 기존 버퍼의 데이터를 새 버퍼로 복사합니다. 이를 반복하여 응답 본문을 완전히 수신할 때까지 읽어 나갑니다.
-
-물론, 이렇게 동적으로 버퍼를 조정하면서 응답 본문을 수신하는 것은 비효율적일 수 있으므로, Content-Length 헤더를 이용하여 응답 본문의 크기를 미리 예측하여 소켓 버퍼 크기를 미리 설정하는 것이 좋습니다.
 
 ## HTTP Request
 -[O] 웹 브라우저가 요청을 보내는 동작을 단순화해서 그대로 구현한다.
@@ -236,34 +227,37 @@ HTTP에서 Content-Length 헤더가 누락된 경우, 클라이언트는 응답 
 ```
 
 > URL을 입력하세요.
-https://porolog.tistory.com/12
+https://porolog.tistory.com/25
 (DNS Lookup...)
-IP 조회 : 211.231.99.250
+IP 조회 : 211.249.222.33
 
-TCP Connection : 211.231.99.250
+TCP Connection : 211.249.222.33
 포트 번호가 지정되어 있지 않습니다. 80번 포트를 사용합니다.
 
-GET /12 HTTP/1.1
-Host: porolog.tistory.com
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36
+> HTTP 요청 메시지
+GET /25 HTTP/1.1
 Accept: text/html
+User-Agent: Mozilla/5.0
 Connection: close
+Host: porolog.tistory.com
 
 
+> HTTP 응답 메시지
 HTTP/1.1 200 
-date: Thu, 16 Feb 2023 08:03:53 GMT
-content-type: text/html;charset=UTF-8
-content-length: 47479
-vary: Accept-Encoding
-t_userid: 8745ef5c09d245a09b03613474335b6ebe8b8e46
-set-cookie: REACTION_GUEST=919e5404b4eb9580fa7a73fdc784bfbdd12aec87
-x-content-type-options: nosniff
-x-xss-protection: 1; mode=block
-cache-control: no-cache, no-store, max-age=0, must-revalidate
-pragma: no-cache
-expires: 0
-connection: close
+Date: Thu, 16 Feb 2023 15:48:10 GMT
+Content-Type: text/html;charset=UTF-8
+Content-Length: 68759
+Connection: close
+Vary: Accept-Encoding
+T_USERID: febb5ddd8748cb3cf80c7857378364938552fb15
+Set-Cookie: REACTION_GUEST=a37040142ff6bdbfe5c5ab10c8de7a0f2f08378a
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
 
+> HTTP 메시지 Body
 <!doctype html>
 <html lang="ko">
 .
@@ -300,3 +294,13 @@ connection: close
 - [O] Reponse Header를 문자열로 출력하고, Body를 문자열로 바꿔서 출력한다.
 - [O] 모든 데이터를 받고 3초 후에 socket을 소멸하고 프로그램을 종료한다.
 
+### 의문점
+
+응답 메시지 첫 줄에 4글자가 무슨 의미일까?
+
+### 강의 노트
+- half-duplex
+- full-duplex
+- End-point : 끝단
+- Terminal : 단말
+- Entity: 

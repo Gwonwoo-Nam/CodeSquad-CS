@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URI;
+import java.util.concurrent.TimeUnit;
 
 public class HttpRequest {
 
@@ -37,7 +38,7 @@ public class HttpRequest {
         Request request = new Request(uri);
 
         // 요청라인
-        System.out.println(request.getRequestMessage());
+        System.out.println("> HTTP 요청 메시지\n"+request.getRequestMessage());
         out.println(request.getRequestMessage());
 
     }
@@ -45,8 +46,13 @@ public class HttpRequest {
     private static void readFromSocket(Socket socket) throws IOException {
         InputStream input = socket.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        Response response = new Response(input, reader);
+        Response response = new Response(reader);
         response.parse();
         System.out.println(response);
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
