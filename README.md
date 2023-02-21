@@ -419,6 +419,7 @@ SQL 스크립트
 ```
 DELIMITER $$
 DROP PROCEDURE IF EXISTS createData;
+
 CREATE PROCEDURE createData()
 BEGIN
         DECLARE i INT DEFAULT 1;
@@ -430,7 +431,7 @@ BEGIN
         DECLARE RANDSTR VARCHAR(3);
         DECLARE RANDNUM INT;
 
-        WHILE (i <= 1000) DO
+        WHILE (i <= 1000000) DO
                 SELECT word FROM words ORDER BY RAND() LIMIT 1 INTO RANDWORD;
 
                 SELECT LEFT(UUID(),3) INTO RANDSTR;
@@ -441,11 +442,30 @@ BEGIN
                 INSERT INTO user_log(nickname, money, last_visit) VALUES(NAME, MONEY, LAST_VISIT);
                 SET i = i + 1;
         END WHILE;
+        COMMIT;
 END $$
 DELIMITER ;
 
+ALTER TABLE user_log DISABLE KEYS;
+SET autocommit = 0;
 CALL createData();
+COMMIT;
+SET autocommit = 1;
+ALTER TABLE user_log ENABLE KEYS;
 ```
+
+1. Auto-commit Off
+Auto-Commit이 활성화된 상태에서는 레코드 단위로 Insert 실행 시마다 Commit을 실행하는데, 레코드 단위로 동기화가 일어나기 때문에 속도가 상당히 저하된다.
+
+100만개 생성 약 1분 30초 소요
+2. Index 비활성화
+
+![img_5.png](img_5.png)
+효과 없음
+
+
+![img_4.png](img_4.png)
+
 
 ### Docker 실행
 
@@ -470,13 +490,13 @@ CALL createData();
 
 
 
-- [ ] user_log 테이블에 100만건의 대용량 데이터를 생성해서 넣어야 한다.
-- [ ] 다음 조건을 만족하는 데이터를 직접 테이블에 넣거나 또는 INSERT 구문을 작성하는 스크립트를 작성한다.
+- [O] user_log 테이블에 100만건의 대용량 데이터를 생성해서 넣어야 한다.
+- [O] 다음 조건을 만족하는 데이터를 직접 테이블에 넣거나 또는 INSERT 구문을 작성하는 스크립트를 작성한다.
 
 ### 데이터 생성 규칙
-- [ ] 사용자 nickname 은 영어 단어 100개 + 랜덤 문자열 3자리 + 랜덤 숫자 4자리로 생성한다.
-- [ ] money 는 1부터 100,000 사이 값을 적당하게 분포하게 만든다.
-- [ ] last_visit 은 최근 한 달 사이로 랜덤 시각으로 생성한다.
+- [O] 사용자 nickname 은 영어 단어 100개 + 랜덤 문자열 3자리 + 랜덤 숫자 4자리로 생성한다.
+- [O] money 는 1부터 100,000 사이 값을 적당하게 분포하게 만든다.
+- [O] last_visit 은 최근 한 달 사이로 랜덤 시각으로 생성한다.
 
 ### 추가 요구 사항
 (선택) progress bar 만들기
