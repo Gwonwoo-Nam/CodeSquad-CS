@@ -6,9 +6,9 @@
 도커 데스크톱은 리눅스 운영체제를 구동시키기 위한 가상환경 지원을 필요로 합니다.
 윈도우에서는 WSL2(Window Subsystem for Linux 2)나 프로페셔널에서 지원하는 Hyper-V를 통해서 가상 환경을 지원합니다.
 
-![img.png](img.png)
+![img.png](./img.png)
 
-![img_1.png](img_1.png)
+![img_1.png](./img_1.png)
 
 ### mySql 컨테이너 생성
 $ docker run -dit --name porosql -e MYSQL_ROOT_PASSWORD=(password) mysql:5.7
