@@ -55,7 +55,7 @@ public class PcManager {
     public int registerUser(int seatNumber) {
         String sql = String.format("INSERT INTO user_list(seat_number) VALUES(%d)", seatNumber);
         query(sql);
-        sql = String.format("SELECT * FROM user_list WHERE seat_number=%d",seatNumber);
+        sql = String.format("SELECT * FROM user_list WHERE seat_number=%d AND finish_time IS NULL",seatNumber);
         return getUserId(sql);
     }
 
