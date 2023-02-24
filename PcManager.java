@@ -21,7 +21,6 @@ public class PcManager {
             Class.forName(dbDriver);
 
             connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-
             System.out.println("DB Connection [성공]");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
