@@ -1,25 +1,27 @@
 public enum Command {
     NEW("^new$") {
         @Override
-        public void run(PcManager pcManager, PcController pcController) {
-            int randomSeat = RandomNumberGenerator.chooseRandomSeat(pcManager);
-            int userId = pcManager.registerUser(randomSeat);
-            pcManager.assignSeat(randomSeat,userId);
-            System.out.println(randomSeat+"번 자리에 앉으세요 : #"+userId);
-            pcManager.printEmptySeat();
+        public void run(UserDao userDao, ComputerDao computerDao) {
+            int randomSeat = RandomNumberGenerator.chooseRandomSeat(computerDao);
+            User user = userDao.registerUser(randomSeat);
+            computerDao.assignSeat(randomSeat, user.getUserId());
+            System.out.println(randomSeat+"번 자리에 앉으세요 : #"+user.getUserId());
+            computerDao.getEmptySeats();
         }
 
     }, STOP("^stop [0-9]*$") {
         @Override
-        public void run(PcManager pcManager, PcController pcController) {
+        public void run(UserDao userDao, ComputerDao computerDao) {
             int userId = getValue();
-            int seatNumber = pcManager.leaveUser(userId);
+            userDao.recordFinishTime(userId);
+            int seatNumber = userDao.findUserSeatById(userId);
+            computerDao.clearSeat(seatNumber);
             System.out.println("이제 "+seatNumber+"번 자리가 비었습니다.");
-            pcManager.printEmptySeat();
+            computerDao.getEmptySeats();
         }
 
     };
-    public abstract void run(PcManager pcManager, PcController pcController);
+    public abstract void run(UserDao userDao, ComputerDao computerDao);
     public String regex;
     private int value;
 

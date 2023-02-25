@@ -83,11 +83,17 @@ INSERT INTO 테이블이름 (필드1, ...) VALUES (값1, ...)
 2. 열과 같은 순서로 입력 시, 열 이름 생략 가능
 3. 몇 개 열 생략 가능
 
-### 리팩토링 : Data Access Object로 분리하기
-DAO : 데이터베이스의 data에 접근하기 위한 객체를 별도로 생성
+### DAO, DTO
+DAO(Data Access Object) 
+데이터베이스의 data에 접근하기 위한 객체를 별도로 생성
 데이터베이스 접근 로직과 비즈니스 로직을 분리한다.
 DAO는 일반적으로 DB와 연결하는 Connection까지 설정되어 있는 경우가 많다.
 
+DTO(Data Transfer Object)
+계층 간 데이터 교환을 위한 자바 빈즈(Java Beans)이다.
+데이터베이스 레코드의 데이터를 매핑하기 위한 데이터 객체를 말한다.
+DTO는 보통 로직을 가지고 있지 않고 data와 그 data 접근을 위한 getter, setter만 가진다.
+즉, DB에서 data를 얻어 Service/Controller 등으로 보낼 때 사용하는 객체.
 
 ### user list 테이블 생성
 ```
