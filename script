@@ -1,0 +1,9 @@
+FROM ubuntu/mysql
+
+#Set the locale
+RUN apt-get update
+RUN apt-get install locales
+ENV LANG ko_KR.utf8
+ENV LANGUAGE ko_KR.utf
+ENV LC_MESSAGES POSIX
+RUN update-locale LANG=ko_KR.utf8 LC_MESSAGES=POSIX

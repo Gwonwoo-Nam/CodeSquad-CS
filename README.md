@@ -378,7 +378,10 @@ INTO TABLE mydb.words FIELDS TERMINATED BY ",";
 
 클라이언트/서버 load data 허용하기
 ```
-vi /etc/mysql/my.cnf
+# mySQL Server
+SET GLOBAL local_infile = 1;
+# 또는
+
 
 # 내용 추가
 [mysql]
